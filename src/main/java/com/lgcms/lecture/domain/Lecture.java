@@ -69,6 +69,7 @@ public class Lecture {
     }
 
     public void modifyLecture(LectureModifyDto dto){
+
         if(dto.getInformation() != null) this.information = dto.getInformation();
 
         if(dto.getPrice() != null) this.price = dto.getPrice();
