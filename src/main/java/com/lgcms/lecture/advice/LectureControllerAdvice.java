@@ -17,6 +17,7 @@ public class LectureControllerAdvice {
     @ExceptionHandler(value = BaseException.class)
     public ResponseEntity<BaseResponse<String>> handleException(BaseException e) {
         ErrorCode errorCode = e.getErrorCode();
+
         return ResponseEntity
             .status(errorCode.getHttpStatus().value())
             .body(BaseResponse.onFailure(errorCode.getStatus(), errorCode.getMessage(), null));
