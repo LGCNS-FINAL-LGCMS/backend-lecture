@@ -2,9 +2,8 @@ package com.lgcms.lecture.dto.response;
 
 import lombok.*;
 
-@Getter @Setter
-@Builder @AllArgsConstructor
-@NoArgsConstructor
+@Data
+@Builder
 public class LectureResponseDto {
 
     private String lectureId;

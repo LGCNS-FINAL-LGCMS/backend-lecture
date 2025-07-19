@@ -1,7 +1,6 @@
 package com.lgcms.lecture.domain;
 
 import com.lgcms.lecture.domain.type.EnrollmentStatus;
-import com.lgcms.lecture.domain.type.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,6 +22,8 @@ public class LectureEnrollment {
     @JoinColumn(name = "student_id")
     private Student student;
 
+    private Long memberId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lecture_id")
     private Lecture lecture;
@@ -30,9 +31,10 @@ public class LectureEnrollment {
     @Enumerated(EnumType.STRING)
     private EnrollmentStatus enrollmentStatus;
 
-    @Enumerated(EnumType.STRING)
-    private PaymentStatus paymentStatus;
-
     private LocalDateTime enrolledAt;
+
+    protected  void setStudent(Student student){
+        this.student = student;
+    }
 
 }

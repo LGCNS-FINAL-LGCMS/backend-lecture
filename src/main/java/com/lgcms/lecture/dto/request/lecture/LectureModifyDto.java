@@ -1,16 +1,9 @@
 package com.lgcms.lecture.dto.request.lecture;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Getter @Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 public class LectureModifyDto {
-
-    private String lectureId;
     
     private String title;
 
