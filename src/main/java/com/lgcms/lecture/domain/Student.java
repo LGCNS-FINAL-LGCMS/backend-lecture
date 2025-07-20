@@ -19,8 +19,13 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long userId;
+    private Long memberId;
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LectureEnrollment> enrollments = new ArrayList<>();
+
+    public void addEnrollment(LectureEnrollment lectureEnrollment){
+        this.enrollments.add(lectureEnrollment);
+        lectureEnrollment.setStudent(this);
+    }
 }
