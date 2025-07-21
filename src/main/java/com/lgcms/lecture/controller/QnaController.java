@@ -1,11 +1,11 @@
 package com.lgcms.lecture.controller;
 
 import com.lgcms.lecture.common.dto.BaseResponse;
-import com.lgcms.lecture.dto.request.qna.AnswerCreateRequest;
+import com.lgcms.lecture.dto.request.qna.AnswerRequest;
+import com.lgcms.lecture.dto.request.qna.AnswerUpdateRequest;
 import com.lgcms.lecture.dto.request.qna.QuestionCreateRequest;
 import com.lgcms.lecture.dto.request.qna.QuestionUpdateRequest;
 import com.lgcms.lecture.dto.response.qna.QnaListResponse;
-import com.lgcms.lecture.service.LectureService;
 import com.lgcms.lecture.service.QnaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -63,10 +63,19 @@ public class QnaController {
 
     @PostMapping("/answer/{id}")
     public ResponseEntity<BaseResponse> registerAnswer(@PathVariable("id") Long questionId,
-                                                       @RequestBody AnswerCreateRequest answerCreateRequest,
+                                                       @RequestBody AnswerRequest answerCreateRequest,
                                                        @RequestHeader("X-USER-ID") String id){
         Long memberId = Long.parseLong("1");
         qnaService.registerAnswer(questionId,memberId,answerCreateRequest);
         return ResponseEntity.ok(BaseResponse.ok(null));
+    }
+
+    @PutMapping("/answer/{id}")
+    public ResponseEntity<BaseResponse> updateAnswer(@PathVariable("id") Long answerId,
+                                                     @RequestBody AnswerRequest answerRequest,
+                                                     @RequestHeader("X-USER-ID") String id){
+        Long memberId = Long.parseLong("1");
+        qnaService.updateAnswer(memberId, answerId,answerRequest);
+        ResponseEntity.ok(BaseResponse.ok(null));
     }
 }

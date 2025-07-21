@@ -27,4 +27,8 @@ public class LectureAnswer {
     protected void addLectureQuestion(LectureQuestion lectureQuestion){
         this.lectureQuestion = lectureQuestion;
     }
+
+    public void updateAnswer(String content){
+        this.content = content;
+    }
 }
