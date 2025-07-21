@@ -27,4 +27,11 @@ public class QnaController {
         return ResponseEntity.ok(BaseResponse.ok(null));
     }
 
+    @PatchMapping("")
+    public ResponseEntity<BaseResponse> updateQuestion(@RequestBody QuestionUpdateRequest questionUpdateRequest,
+                                                       @RequestHeader("X-USER-ID") String id){
+        Long memberId = Long.parseLong("1");
+        qnaService.updateQuestion(memberId,questionUpdateRequest);
+        return ResponseEntity.ok(BaseResponse.ok(null));
+    }
 }

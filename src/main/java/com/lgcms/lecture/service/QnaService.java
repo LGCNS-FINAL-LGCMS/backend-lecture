@@ -35,4 +35,20 @@ public class QnaService {
         lectureQuestionRepository.save(lectureQuestion);
     }
 
+    @Transactional
+    public void updateQuestion(Long memberId, QuestionUpdateRequest questionUpdateRequest) {
+        verifyQuestion(memberId, questionUpdateRequest.id());
+
+        LectureQuestion question = lectureQuestionRepository.findById(questionUpdateRequest.id())
+                .orElseThrow(()-> new BaseException(QnaError.QNA_NOT_FOUND));
+
+        question.updateQuestion(questionUpdateRequest.title(), questionUpdateRequest.content());
+    }
+
+    @Transactional
+    public void verifyQuestion(Long memberId, Long qnaId){
+        if(!lectureQuestionRepository.existsByIdAndMemberId(qnaId,memberId)){
+            throw new BaseException(QnaError.QNA_FORBIDDEN);
+        }
+    }
 }

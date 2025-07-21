@@ -37,4 +37,8 @@ public class LectureQuestion {
         lectureAnswer.addLectureQuestion(this);
     }
 
+    public void updateQuestion(String title, String content){
+        if(title != null) this.title = title;
+        if(content != null) this.content = content;
+    }
 }
