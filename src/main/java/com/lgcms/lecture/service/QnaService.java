@@ -36,13 +36,20 @@ public class QnaService {
     }
 
     @Transactional
-    public void updateQuestion(Long memberId, QuestionUpdateRequest questionUpdateRequest) {
-        verifyQuestion(memberId, questionUpdateRequest.id());
+    public void updateQuestion(Long memberId, Long qeustionId, QuestionUpdateRequest questionUpdateRequest) {
+        verifyQuestion(memberId, qeustionId);
 
-        LectureQuestion question = lectureQuestionRepository.findById(questionUpdateRequest.id())
+        LectureQuestion question = lectureQuestionRepository.findById(qeustionId)
                 .orElseThrow(()-> new BaseException(QnaError.QNA_NOT_FOUND));
 
         question.updateQuestion(questionUpdateRequest.title(), questionUpdateRequest.content());
+    }
+
+    @Transactional
+    public void deleteQuestion(Long memberId, Long questionId) {
+        verifyQuestion(memberId, questionId);
+
+        lectureQuestionRepository.deleteById(questionId);
     }
 
     @Transactional

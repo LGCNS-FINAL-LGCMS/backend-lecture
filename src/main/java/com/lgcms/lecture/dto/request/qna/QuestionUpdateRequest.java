@@ -4,6 +4,5 @@ import lombok.NonNull;
 
 public record QuestionUpdateRequest(
         String title,
-        String content,
-        @NonNull Long id
+        String content
 ) {}

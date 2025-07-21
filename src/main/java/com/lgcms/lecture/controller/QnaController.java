@@ -27,11 +27,20 @@ public class QnaController {
         return ResponseEntity.ok(BaseResponse.ok(null));
     }
 
-    @PatchMapping("")
-    public ResponseEntity<BaseResponse> updateQuestion(@RequestBody QuestionUpdateRequest questionUpdateRequest,
+    @PatchMapping("/{id}")
+    public ResponseEntity<BaseResponse> updateQuestion(@PathVariable("id") Long questionId,
+                                                       @RequestBody QuestionUpdateRequest questionUpdateRequest,
                                                        @RequestHeader("X-USER-ID") String id){
         Long memberId = Long.parseLong("1");
-        qnaService.updateQuestion(memberId,questionUpdateRequest);
+        qnaService.updateQuestion(memberId,questionId, questionUpdateRequest);
         return ResponseEntity.ok(BaseResponse.ok(null));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<BaseResponse> deleteQuestion(@PathVariable("id") Long questionId,
+                                                       @RequestHeader("X-USER-ID") String id){
+        Long memberId = Long.parseLong("1");
+        qnaService.deleteQuestion(memberId,questionId);
+        ResponseEntity.ok(BaseResponse.ok(null));
     }
 }
