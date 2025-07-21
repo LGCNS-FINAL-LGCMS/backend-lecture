@@ -10,7 +10,9 @@ import java.util.List;
 public interface LectureQuestionRepository extends JpaRepository<LectureQuestion, Long> {
     boolean existsByIdAndMemberId(Long qnaId, Long memberId);
 
-    List<LectureQuestion> findAllByLectureId(Long lectureId);
+    
 
     List<LectureQuestion> findAllByMemberId(Long memberId);
+
+    List<LectureQuestion> findAllByLectureId(String lectureId);
 }

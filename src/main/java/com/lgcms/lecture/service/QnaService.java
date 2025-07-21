@@ -3,7 +3,9 @@ package com.lgcms.lecture.service;
 import com.lgcms.lecture.common.dto.exception.BaseException;
 import com.lgcms.lecture.common.dto.exception.LectureError;
 import com.lgcms.lecture.common.dto.exception.QnaError;
+import com.lgcms.lecture.domain.LectureAnswer;
 import com.lgcms.lecture.domain.LectureQuestion;
+import com.lgcms.lecture.dto.request.qna.AnswerCreateRequest;
 import com.lgcms.lecture.dto.request.qna.QuestionCreateRequest;
 import com.lgcms.lecture.dto.request.qna.QuestionUpdateRequest;
 import com.lgcms.lecture.dto.response.qna.AnswerResponse;
@@ -63,13 +65,19 @@ public class QnaService {
     }
 
     @Transactional
-    public List<QnaListResponse> getQnaList(Long lectureId) {
+    public void verifyAnswer(Long memberId, String lectureId){
+        if(!lectureService.isLecturer(memberId,lectureId)) throw new BaseException(QnaError.QNA_NOT_FOUND);
+    }
+
+    @Transactional
+    public List<QnaListResponse> getQnaList(String lectureId) {
         List<LectureQuestion> lectureQuestions = lectureQuestionRepository.findAllByLectureId(lectureId);
 
         return lectureQuestions.stream()
                 .map(question -> new QnaListResponse(
                         question.getTitle(),
                         question.getContent(),
+                        question.getId(),
                         question.getLectureAnswers().stream()
                                 .map(answer -> new AnswerResponse(
                                         answer.getContent()
@@ -85,10 +93,23 @@ public class QnaService {
                 .map(question -> new QnaListResponse(
                         question.getTitle(),
                         question.getContent(),
+                        question.getId(),
                         question.getLectureAnswers().stream()
                                 .map(answer -> new AnswerResponse(
                                         answer.getContent()
                                 )).toList()
                 )).toList();
+    }
+
+    @Transactional
+    public void registerAnswer(Long questionId, Long memberId, AnswerCreateRequest answerCreateRequest) {
+        if(!lectureService.isLecturer(memberId, answerCreateRequest.lectureId()))
+            throw new BaseException(QnaError.QNA_NOT_FOUND);
+        LectureQuestion lectureQuestion = lectureQuestionRepository.findById(questionId)
+                .orElseThrow(() -> new BaseException(QnaError.QNA_NOT_FOUND));
+        LectureAnswer lectureAnswer = LectureAnswer.builder()
+                .content(answerCreateRequest.content())
+                .build();
+        lectureQuestion.addAnswer(lectureAnswer);
     }
 }

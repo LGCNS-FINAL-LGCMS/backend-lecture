@@ -1,6 +1,7 @@
 package com.lgcms.lecture.controller;
 
 import com.lgcms.lecture.common.dto.BaseResponse;
+import com.lgcms.lecture.dto.request.qna.AnswerCreateRequest;
 import com.lgcms.lecture.dto.request.qna.QuestionCreateRequest;
 import com.lgcms.lecture.dto.request.qna.QuestionUpdateRequest;
 import com.lgcms.lecture.dto.response.qna.QnaListResponse;
@@ -48,7 +49,7 @@ public class QnaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BaseResponse> getQnaList(@PathVariable("id") Long lectureId){
+    public ResponseEntity<BaseResponse> getQnaList(@PathVariable("id") String lectureId){
         List<QnaListResponse> qnaListResponse = qnaService.getQnaList(lectureId);
         return ResponseEntity.ok(BaseResponse.ok(qnaListResponse));
     }
@@ -58,5 +59,14 @@ public class QnaController {
         Long memberId = Long.parseLong("1");
         List<QnaListResponse> qnaListResponse = qnaService.getMemberQnaList(memberId);
         return ResponseEntity.ok(BaseResponse.ok(qnaListResponse));
+    }
+
+    @PostMapping("/answer/{id}")
+    public ResponseEntity<BaseResponse> registerAnswer(@PathVariable("id") Long questionId,
+                                                       @RequestBody AnswerCreateRequest answerCreateRequest,
+                                                       @RequestHeader("X-USER-ID") String id){
+        Long memberId = Long.parseLong("1");
+        qnaService.registerAnswer(questionId,memberId,answerCreateRequest);
+        return ResponseEntity.ok(BaseResponse.ok(null));
     }
 }
