@@ -6,6 +6,8 @@ import com.lgcms.lecture.common.dto.exception.QnaError;
 import com.lgcms.lecture.domain.LectureQuestion;
 import com.lgcms.lecture.dto.request.qna.QuestionCreateRequest;
 import com.lgcms.lecture.dto.request.qna.QuestionUpdateRequest;
+import com.lgcms.lecture.dto.response.qna.AnswerResponse;
+import com.lgcms.lecture.dto.response.qna.QnaListResponse;
 import com.lgcms.lecture.repository.LectureAnswerRepository;
 import com.lgcms.lecture.repository.LectureQuestionRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -57,5 +60,19 @@ public class QnaService {
         if(!lectureQuestionRepository.existsByIdAndMemberId(qnaId,memberId)){
             throw new BaseException(QnaError.QNA_FORBIDDEN);
         }
+    }
+
+    public List<QnaListResponse> getQnaList(Long lectureId) {
+        List<LectureQuestion> lectureQuestions = lectureQuestionRepository.findAllByLectureId(lectureId);
+
+        return lectureQuestions.stream()
+                .map(question -> new QnaListResponse(
+                        question.getTitle(),
+                        question.getContent(),
+                        question.getLectureAnswers().stream()
+                                .map(answer -> new AnswerResponse(
+                                        answer.getContent()
+                                )).toList()
+                )).toList();
     }
 }

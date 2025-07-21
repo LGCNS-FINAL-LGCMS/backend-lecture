@@ -3,12 +3,15 @@ package com.lgcms.lecture.controller;
 import com.lgcms.lecture.common.dto.BaseResponse;
 import com.lgcms.lecture.dto.request.qna.QuestionCreateRequest;
 import com.lgcms.lecture.dto.request.qna.QuestionUpdateRequest;
+import com.lgcms.lecture.dto.response.qna.QnaListResponse;
 import com.lgcms.lecture.service.LectureService;
 import com.lgcms.lecture.service.QnaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/qna")
@@ -41,6 +44,12 @@ public class QnaController {
                                                        @RequestHeader("X-USER-ID") String id){
         Long memberId = Long.parseLong("1");
         qnaService.deleteQuestion(memberId,questionId);
-        ResponseEntity.ok(BaseResponse.ok(null));
+        return ResponseEntity.ok(BaseResponse.ok(null));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<BaseResponse> getQnaList(@PathVariable("id") Long lectureId){
+        List<QnaListResponse> qnaListResponse = qnaService.getQnaList(lectureId);
+        return ResponseEntity.ok(BaseResponse.ok(qnaListResponse));
     }
 }
