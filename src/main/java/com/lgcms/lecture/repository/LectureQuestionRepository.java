@@ -11,4 +11,6 @@ public interface LectureQuestionRepository extends JpaRepository<LectureQuestion
     boolean existsByIdAndMemberId(Long qnaId, Long memberId);
 
     List<LectureQuestion> findAllByLectureId(Long lectureId);
+
+    List<LectureQuestion> findAllByMemberId(Long memberId);
 }

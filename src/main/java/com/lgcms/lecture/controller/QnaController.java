@@ -52,4 +52,11 @@ public class QnaController {
         List<QnaListResponse> qnaListResponse = qnaService.getQnaList(lectureId);
         return ResponseEntity.ok(BaseResponse.ok(qnaListResponse));
     }
+
+    @GetMapping("/member")
+    public ResponseEntity<BaseResponse> getMemberQnaList(@RequestHeader("X-USER-ID") String id){
+        Long memberId = Long.parseLong("1");
+        List<QnaListResponse> qnaListResponse = qnaService.getMemberQnaList(memberId);
+        return ResponseEntity.ok(BaseResponse.ok(qnaListResponse));
+    }
 }

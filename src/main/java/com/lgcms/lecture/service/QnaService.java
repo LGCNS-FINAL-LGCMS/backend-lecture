@@ -62,8 +62,24 @@ public class QnaService {
         }
     }
 
+    @Transactional
     public List<QnaListResponse> getQnaList(Long lectureId) {
         List<LectureQuestion> lectureQuestions = lectureQuestionRepository.findAllByLectureId(lectureId);
+
+        return lectureQuestions.stream()
+                .map(question -> new QnaListResponse(
+                        question.getTitle(),
+                        question.getContent(),
+                        question.getLectureAnswers().stream()
+                                .map(answer -> new AnswerResponse(
+                                        answer.getContent()
+                                )).toList()
+                )).toList();
+    }
+
+    @Transactional
+    public List<QnaListResponse> getMemberQnaList(Long memberId) {
+        List<LectureQuestion> lectureQuestions = lectureQuestionRepository.findAllByMemberId(memberId);
 
         return lectureQuestions.stream()
                 .map(question -> new QnaListResponse(
