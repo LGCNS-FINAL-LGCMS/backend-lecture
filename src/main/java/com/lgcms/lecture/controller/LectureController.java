@@ -5,7 +5,7 @@ import com.lgcms.lecture.common.dto.BaseResponse;
 import com.lgcms.lecture.dto.request.lecture.LectureModifyDto;
 import com.lgcms.lecture.dto.request.lecture.LectureRequestDto;
 import com.lgcms.lecture.dto.request.lecture.LectureStatusDto;
-import com.lgcms.lecture.dto.response.LectureResponseDto;
+import com.lgcms.lecture.dto.response.lecture.LectureResponseDto;
 import com.lgcms.lecture.service.LectureService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -29,7 +29,6 @@ public class LectureController {
     public ResponseEntity<BaseResponse> saveLecture(@RequestBody LectureRequestDto lectureRequestDto ) {
         Long memberId = Long.parseLong("1");
         String lectureId = lectureService.saveLecture(lectureRequestDto, memberId);
-        lectureService.joinLecture(memberId,lectureId);
         return ResponseEntity.ok(BaseResponse.ok(null));
     }
 

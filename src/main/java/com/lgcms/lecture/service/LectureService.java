@@ -12,7 +12,7 @@ import com.lgcms.lecture.domain.type.VideoStatus;
 import com.lgcms.lecture.dto.request.lecture.LectureModifyDto;
 import com.lgcms.lecture.dto.request.lecture.LectureRequestDto;
 import com.lgcms.lecture.dto.request.lecture.LectureStatusDto;
-import com.lgcms.lecture.dto.response.LectureResponseDto;
+import com.lgcms.lecture.dto.response.lecture.LectureResponseDto;
 import com.lgcms.lecture.repository.LectureEnrollmentRepository;
 import com.lgcms.lecture.repository.LectureRepository;
 import com.lgcms.lecture.repository.StudentRepository;
@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -52,6 +51,9 @@ public class LectureService {
                         .information(lectureRequestDto.getInformation())
                         .createdAt(LocalDateTime.now())
                 .build());
+
+        joinLecture(memberId,lectureId);
+
         return lectureId;
     }
 
@@ -129,5 +131,11 @@ public class LectureService {
     public boolean isExist(Long memberId, String lectureId) {
 
         return lectureEnrollmentRepository.existsByLectureIdAndStudent_MemberId(lectureId, memberId);
+    }
+
+    //강사 인증
+    @Transactional
+    public boolean isLecturer(Long memberId, String lectureId){
+        return lectureRepository.existsByIdAndMemberId(lectureId, memberId);
     }
 }

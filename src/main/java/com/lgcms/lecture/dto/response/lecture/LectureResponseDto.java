@@ -1,4 +1,4 @@
-package com.lgcms.lecture.dto.response;
+package com.lgcms.lecture.dto.response.lecture;
 
 import lombok.*;
 
