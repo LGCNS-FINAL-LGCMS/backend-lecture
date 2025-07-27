@@ -45,4 +45,19 @@ public class ReviewService {
                 ).toList();
         return reviewResponseList;
     }
+
+    @Transactional
+    public List<ReviewResponse> getReview(Long memberId) {
+        List<Review> reviewList = reviewRepository.findAllByMemberId(memberId);
+
+        List<ReviewResponse> reviewResponseList = reviewList.stream()
+                .map(review -> ReviewResponse.builder()
+                        .start(review.getStar())
+                        .content(review.getContent())
+                        .nickname(review.getNickname())
+                        .build()
+                ).toList();
+
+        return reviewResponseList;
+    }
 }

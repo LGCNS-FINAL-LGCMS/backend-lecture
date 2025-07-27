@@ -34,4 +34,12 @@ public class ReviewController {
 
         return ResponseEntity.ok(BaseResponse.ok(reviewResponseList));
     }
+
+    @GetMapping("")
+    public ResponseEntity<BaseResponse> getReview(@PathVariable("id") String lectureId,
+                                                  @RequestHeader("X-USER-ID") Long memberId){
+        List<ReviewResponse> reviewResponseList = reviewService.getReview(memberId);
+
+        return ResponseEntity.ok(BaseResponse.ok(reviewResponseList));
+    }
 }

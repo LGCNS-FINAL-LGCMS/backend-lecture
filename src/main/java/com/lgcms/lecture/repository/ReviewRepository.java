@@ -12,4 +12,6 @@ import java.util.List;
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     List<Review> findAllByLectureId(String lectureId);
+
+    List<Review> findAllByMemberId(Long memberId);
 }
