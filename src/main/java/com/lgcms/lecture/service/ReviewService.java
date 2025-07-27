@@ -1,12 +1,16 @@
 package com.lgcms.lecture.service;
 
+import com.lgcms.lecture.controller.ReviewController;
 import com.lgcms.lecture.domain.Review;
 import com.lgcms.lecture.dto.request.review.ReviewCreateRequest;
+import com.lgcms.lecture.dto.response.ReviewResponse;
 import com.lgcms.lecture.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Slf4j
@@ -26,5 +30,19 @@ public class ReviewService {
                 .build();
 
         reviewRepository.save(review);
+    }
+
+    @Transactional
+    public List<ReviewResponse> getAllReviews(String lectureId) {
+        List<Review> reviewList = reviewRepository.findAllByLectureId(lectureId);
+
+        List<ReviewResponse> reviewResponseList = reviewList.stream()
+                .map(review -> ReviewResponse.builder()
+                        .start(review.getStar())
+                        .content(review.getContent())
+                        .nickname(review.getNickname())
+                        .build()
+                ).toList();
+        return reviewResponseList;
     }
 }
