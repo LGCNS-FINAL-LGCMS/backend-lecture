@@ -15,6 +15,7 @@ import com.lgcms.lecture.repository.LectureAnswerRepository;
 import com.lgcms.lecture.repository.LectureQuestionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j
+@Service
 public class QnaService {
     private final LectureQuestionRepository lectureQuestionRepository;
     private final LectureAnswerRepository lectureAnswerRepository;

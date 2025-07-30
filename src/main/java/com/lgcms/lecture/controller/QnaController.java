@@ -76,6 +76,6 @@ public class QnaController {
                                                      @RequestHeader("X-USER-ID") String id){
         Long memberId = Long.parseLong("1");
         qnaService.updateAnswer(memberId, answerId,answerRequest);
-        ResponseEntity.ok(BaseResponse.ok(null));
+        return ResponseEntity.ok(BaseResponse.ok(null));
     }
 }

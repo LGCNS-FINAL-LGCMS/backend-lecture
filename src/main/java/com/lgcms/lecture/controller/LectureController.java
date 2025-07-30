@@ -39,6 +39,14 @@ public class LectureController {
         List<LectureResponseDto> lectureList = lectureService.getLectureList();
         return ResponseEntity.ok(BaseResponse.ok(lectureList));
     }
+
+    @GetMapping("/category/{category}")
+    public ResponseEntity<BaseResponse> getLectureByCategory(@PathVariable("category")String category){
+        List<LectureResponseDto> lectureList = lectureService.getLectureByCategory(category);
+        return ResponseEntity.ok(BaseResponse.ok(lectureList));
+    }
+
+
     //단일 조회
     @GetMapping("/{id}")
     public ResponseEntity<BaseResponse> getLecture(@PathVariable("id") String lectureId){

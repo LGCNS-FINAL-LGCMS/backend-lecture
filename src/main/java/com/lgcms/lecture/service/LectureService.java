@@ -138,4 +138,18 @@ public class LectureService {
     public boolean isLecturer(Long memberId, String lectureId){
         return lectureRepository.existsByIdAndMemberId(lectureId, memberId);
     }
+
+    @Transactional
+    public List<LectureResponseDto> getLectureByCategory(String category) {
+        List<Lecture> lectureList = lectureRepository.findByCategory(category);
+        return lectureList.stream()
+                .map(lecture -> LectureResponseDto.builder()
+                        .lectureId(lecture.getId())
+                        .thumbnail(lecture.getThumbnail())
+                        .price(lecture.getPrice())
+                        .title(lecture.getTitle())
+                        .build()
+                ).toList();
+    }
+
 }
