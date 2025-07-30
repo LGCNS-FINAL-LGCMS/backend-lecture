@@ -152,4 +152,17 @@ public class LectureService {
                 ).toList();
     }
 
+    @Transactional
+    public List<LectureResponseDto> getLectureByKeyword(String keyword) {
+        List<Lecture> lectureList = lectureRepository.findByTitleContaining(keyword);
+        return lectureList.stream()
+                .map(
+                        lecture -> LectureResponseDto.builder()
+                                .title(lecture.getTitle())
+                                .price(lecture.getPrice())
+                                .lectureId(lecture.getId())
+                                .thumbnail(lecture.getThumbnail())
+                                .build()
+                ).toList();
+    }
 }

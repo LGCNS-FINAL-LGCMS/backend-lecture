@@ -46,6 +46,11 @@ public class LectureController {
         return ResponseEntity.ok(BaseResponse.ok(lectureList));
     }
 
+    @GetMapping("/search/{keyword}")
+    public ResponseEntity<BaseResponse> getLectureByKeyword(@PathVariable("keyword")String keyword){
+        List<LectureResponseDto> lectureList = lectureService.getLectureByKeyword(keyword);
+        return ResponseEntity.ok(BaseResponse.ok(lectureList));
+    }
 
     //단일 조회
     @GetMapping("/{id}")
