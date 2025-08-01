@@ -26,6 +26,10 @@ public class Lecture {
 
     private String title;
 
+    private String nickname;
+
+    private String description;
+
     private String information;
 
     private String category;

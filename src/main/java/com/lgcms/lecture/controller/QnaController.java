@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/qna")
+@RequestMapping("api/qna")
 @RequiredArgsConstructor
 @Slf4j
 public class QnaController {
@@ -26,9 +26,9 @@ public class QnaController {
     public ResponseEntity<BaseResponse> registerQuestion(@RequestBody QuestionCreateRequest questionCreateRequest,
                                                          @RequestHeader("X-USER-ID") String id){
         Long memberId = Long.parseLong("1");
-        qnaService.registerQuestion(memberId,questionCreateRequest);
+        Long qnaId = qnaService.registerQuestion(memberId,questionCreateRequest);
 
-        return ResponseEntity.ok(BaseResponse.ok(null));
+        return ResponseEntity.ok(BaseResponse.ok(qnaId));
     }
 
     @PatchMapping("/{id}")

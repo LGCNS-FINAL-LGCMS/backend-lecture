@@ -30,17 +30,20 @@ public class QnaService {
     private final LectureService lectureService;
 
     @Transactional
-    public void registerQuestion(Long memberId, QuestionCreateRequest questionCreateRequest) {
+    public Long registerQuestion(Long memberId, QuestionCreateRequest questionCreateRequest) {
         if(!lectureService.isExist(memberId, questionCreateRequest.getLectureId())){
             throw new BaseException(LectureError.LECTURE_FORBIDDEN);
         }
         LectureQuestion lectureQuestion = LectureQuestion.builder()
                 .lectureId(questionCreateRequest.getLectureId())
+                .memberId(memberId)
                 .title(questionCreateRequest.getTitle())
                 .content(questionCreateRequest.getContent())
                 .lectureAnswers(new ArrayList<>())
                 .build();
         lectureQuestionRepository.save(lectureQuestion);
+
+        return lectureQuestion.getId();
     }
 
     @Transactional
