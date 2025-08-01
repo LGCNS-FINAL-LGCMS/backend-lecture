@@ -30,7 +30,7 @@ public class LectureQuestion {
     private String content;
 
     @OneToMany(mappedBy = "lectureQuestion", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<LectureAnswer> lectureAnswers = new ArrayList<>();
+    private List<LectureAnswer> lectureAnswers;
 
     public void addAnswer(LectureAnswer lectureAnswer){
         this.lectureAnswers.add(lectureAnswer);

@@ -8,6 +8,10 @@ public class LectureResponseDto {
 
     private String lectureId;
 
+    private String nickname;
+
+    private String description;
+
     private String title;
 
     private Long price;
@@ -17,4 +21,6 @@ public class LectureResponseDto {
     private String reviewAvg;
 
     private String reviewCount;
+
+    private String information;
 }

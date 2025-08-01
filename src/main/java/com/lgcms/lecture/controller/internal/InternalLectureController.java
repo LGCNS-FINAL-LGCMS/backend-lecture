@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/internal/lecture")
+@RestController("/api/internal/lecture")
 @RequiredArgsConstructor
 public class InternalLectureController {
     private final LectureService lectureService;

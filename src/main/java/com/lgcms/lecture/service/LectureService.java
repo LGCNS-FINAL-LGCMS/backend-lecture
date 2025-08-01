@@ -18,6 +18,8 @@ import com.lgcms.lecture.repository.LectureRepository;
 import com.lgcms.lecture.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +46,8 @@ public class LectureService {
                         .videoStatus(VideoStatus.ENCODING)
                         .id(lectureId)
                         .memberId(memberId)
+                        .description(lectureRequestDto.getDescription())
+                        .nickname(lectureRequestDto.getNickname())
                         .category(lectureRequestDto.getCategory())
                         .price(lectureRequestDto.getPrice())
                         .title(lectureRequestDto.getTitle())
@@ -58,18 +62,29 @@ public class LectureService {
     }
 
     @Transactional
-    public List<LectureResponseDto> getLectureList() {
-        List<Lecture> lectureList = lectureRepository.findAll();
-
-        return lectureList.stream()
+    public Page<LectureResponseDto> getLectureList(Pageable pageable, String keyword, String category) {
+        Page<Lecture> lectureList;
+//                = lectureRepository.findAll(pageable);
+        if(keyword != null && category != null && !keyword.isBlank() && !category.isBlank()){
+            lectureList = lectureRepository.findAllByKeywordAndCategory(keyword,category,pageable);
+        }else if(keyword != null && !keyword.isBlank()){
+            lectureList = lectureRepository.findByKeyword(keyword, pageable);
+        }else if(category != null && !category.isBlank()){
+            lectureList = lectureRepository.findByCategoryAsPage(category, pageable);
+        }else{
+            lectureList = lectureRepository.findAll(pageable);
+        }
+        return lectureList
                 .map(lecture -> LectureResponseDto.builder()
                                 .lectureId(lecture.getId())
+                                .description(lecture.getDescription())
+                                .nickname(lecture.getNickname())
                                 .title(lecture.getTitle())
                                 .price(lecture.getPrice())
                                 .thumbnail(lecture.getThumbnail())
+                                .information(lecture.getInformation())
                                 .build()
-                                                )
-                .toList();
+                                                );
     }
 
     @Transactional
@@ -85,9 +100,12 @@ public class LectureService {
 
         return LectureResponseDto.builder()
                 .price(lecture.getPrice())
+                .nickname(lecture.getNickname())
+                .description(lecture.getDescription())
                 .lectureId(lecture.getId())
                 .thumbnail(lecture.getThumbnail())
                 .title(lecture.getTitle())
+                .information(lecture.getInformation())
                 .build();
     }
 
@@ -137,5 +155,36 @@ public class LectureService {
     @Transactional
     public boolean isLecturer(Long memberId, String lectureId){
         return lectureRepository.existsByIdAndMemberId(lectureId, memberId);
+    }
+
+    @Transactional
+    public List<LectureResponseDto> getLectureByCategory(String category) {
+        List<Lecture> lectureList = lectureRepository.findByCategory(category);
+        return lectureList.stream()
+                .map(lecture -> LectureResponseDto.builder()
+                        .lectureId(lecture.getId())
+                        .description(lecture.getDescription())
+                        .nickname(lecture.getNickname())
+                        .thumbnail(lecture.getThumbnail())
+                        .price(lecture.getPrice())
+                        .title(lecture.getTitle())
+                        .build()
+                ).toList();
+    }
+
+    @Transactional
+    public List<LectureResponseDto> getLectureByKeyword(String keyword) {
+        List<Lecture> lectureList = lectureRepository.findByTitleContaining(keyword);
+        return lectureList.stream()
+                .map(
+                        lecture -> LectureResponseDto.builder()
+                                .title(lecture.getTitle())
+                                .description(lecture.getDescription())
+                                .nickname(lecture.getNickname())
+                                .price(lecture.getPrice())
+                                .lectureId(lecture.getId())
+                                .thumbnail(lecture.getThumbnail())
+                                .build()
+                ).toList();
     }
 }

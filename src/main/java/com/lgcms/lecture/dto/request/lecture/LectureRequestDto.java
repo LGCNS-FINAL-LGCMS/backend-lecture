@@ -8,9 +8,11 @@ public class LectureRequestDto {
 
     private String title;
 
-    private String thumbnail;
-
     private String category;
+
+    private String nickname;
+
+    private String description;
 
     private String information;
 
