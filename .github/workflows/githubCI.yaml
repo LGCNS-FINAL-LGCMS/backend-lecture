@@ -15,18 +15,30 @@ jobs:
   build:
     runs-on: ubuntu-latest
     services:
-      postgres:
-        image: postgres:latest
+      pgvector:
+        image: pgvector/pgvector:pg17
         env:
           POSTGRES_USER: lgcms
           POSTGRES_PASSWORD: 1234
-          POSTGRES_DB: lecture
+          POSTGRES_DB: testdb
         ports:
           - 5432:5432
-      redis:
-        image: redis:latest
+      valkey:
+        image: valkey/valkey:alpine3.22
         ports:
           - 6379:6379
+      kafka:
+        image: bitnami/kafka:4.0.0
+        env:
+          KAFKA_CFG_NODE_ID: 0
+          KAFKA_CFG_PROCESS_ROLES: controller,broker
+          KAFKA_CFG_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+          KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+          KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 0@kafka:9093
+          KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
+          KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: true
+        ports:
+          - 9092:9092
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -53,7 +65,7 @@ jobs:
 
       - name: Build with Gradle
         id: buildWithGradle
-        run: ./gradlew clean build -x test
+        run: ./gradlew clean build
         shell: bash
 
       - name: Extract App Name & Version
