@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Entity
 @Getter@Builder
 @NoArgsConstructor
@@ -22,13 +25,25 @@ public class Review {
 
     private String lectureId;
 
-    private String content;
-
     private String nickname;
 
-    @Column(length = 2000)
-    private String details;
+    private String comment;
 
-    @Column(length = 2000)
-    private String etc;
+    @Column(columnDefinition = "text")
+    private String suggestion;
+
+    private LocalDateTime createAt;
+
+    @PrePersist
+    public void setDate(){
+        this.createAt = LocalDateTime.now();
+    }
+
+    @OneToMany(mappedBy = "review", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.REMOVE)
+    private List<ReviewContent> reviewContents;
+
+    public void addReviewContent(ReviewContent content){
+        this.reviewContents.add(content);
+        content.addReview(this);
+    }
 }

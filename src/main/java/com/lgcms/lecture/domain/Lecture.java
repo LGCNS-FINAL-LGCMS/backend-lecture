@@ -38,15 +38,13 @@ public class Lecture {
 
     private String thumbnail;
 
-    private String sampleItemUrl;
-
     private Long price;
 
     private Long totalAmount;
 
     private Long reviewCount;
 
-    private Long avgRating;
+    private Double averageStar;
 
     @Enumerated(EnumType.STRING)
     private VideoStatus videoStatus;
@@ -60,6 +58,13 @@ public class Lecture {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+    @PrePersist
+    public void initLecture(){
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+        this.reviewCount = 0L;
+        this.averageStar = 0.0;
+    }
 
     public void modifyLectureStatus(LectureStatus lectureStatus){
         this.lectureStatus  = lectureStatus;
@@ -82,5 +87,10 @@ public class Lecture {
 
     public void modifyDate(){
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public void updateReview(Integer star){
+        this.averageStar = ((this.averageStar * this.reviewCount) + star) / (this.reviewCount + 1);
+        this.reviewCount++;
     }
 }
