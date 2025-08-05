@@ -6,6 +6,7 @@ import com.lgcms.lecture.dto.response.ReviewResponse;
 import com.lgcms.lecture.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/review")
+@RequestMapping("/api/review")
 @Slf4j
 public class ReviewController {
 
@@ -24,7 +25,7 @@ public class ReviewController {
                                                        @RequestBody ReviewCreateRequest reviewCreateRequest,
                                                        @RequestHeader("X-USER-ID") Long memberId){
         reviewService.createReview(lectureId,memberId,reviewCreateRequest);
-        return ResponseEntity.ok(BaseResponse.ok(null));
+        return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponse.ok(null));
     }
 
     @GetMapping("/list/{id}")
