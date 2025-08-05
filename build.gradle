@@ -35,7 +35,7 @@ dependencies {
 	implementation 'org.springframework.kafka:spring-kafka'
 	implementation 'net.bramp.ffmpeg:ffmpeg:0.7.0'
 	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'com.mysql:mysql-connector-j:8.4.0'
+	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.kafka:spring-kafka-test'
@@ -51,3 +51,20 @@ dependencyManagement {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+jar {
+	enabled = false
+}
+
+tasks.register("getAppName") {
+	doLast {
+		println("${rootProject.name}")
+	}
+}
+
+tasks.register("getAppVersion") {
+	doLast {
+		println("${rootProject.version}")
+	}
+}
+
