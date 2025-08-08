@@ -17,26 +17,28 @@ public interface LectureRepository extends JpaRepository<Lecture, String> {
     boolean existsByIdAndMemberId(String lectureId, Long memberId);
 
     List<Lecture> findByCategory(String category);
+
     List<Lecture> findByTitleContaining(String keyword);
 
-    @Query(value = """
-            SELECT l
-            FROM Lecture l
-            WHERE l.title LIKE :keyword
-              AND l.category LIKE :category
+    @Query("""
+                SELECT l
+                FROM Lecture l
+                WHERE l.title LIKE CONCAT('%', :keyword, '%')
+                  AND l.category LIKE CONCAT('%', :category, '%')
             """)
     Page<Lecture> findAllByKeywordAndCategory(@Param("keyword") String keyword, @Param("category") String category, Pageable pageable);
 
     @Query(value = """
             SELECT l
             FROM Lecture l
-            WHERE l.title LIKE :keyword
+            WHERE l.title LIKE CONCAT('%', :keyword, '%')
             """)
     Page<Lecture> findByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
     @Query(value = """
             SELECT l
             FROM Lecture l
-            WHERE l.category LIKE :category
+            WHERE l.category LIKE CONCAT('%', :category, '%')
             """)
-    Page<Lecture> findByCategoryAsPage(@Param("category") String category, Pageable pageable);}
+    Page<Lecture> findByCategoryAsPage(@Param("category") String category, Pageable pageable);
+}
