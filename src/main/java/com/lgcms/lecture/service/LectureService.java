@@ -83,6 +83,8 @@ public class LectureService {
                                 .price(lecture.getPrice())
                                 .thumbnail(lecture.getThumbnail())
                                 .information(lecture.getInformation())
+                                .averageStar(lecture.getAverageStar())
+                                .reviewCount(lecture.getReviewCount())
                                 .build()
                                                 );
     }

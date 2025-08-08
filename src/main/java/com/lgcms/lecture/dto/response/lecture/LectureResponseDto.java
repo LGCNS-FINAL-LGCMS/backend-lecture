@@ -18,9 +18,9 @@ public class LectureResponseDto {
 
     private String thumbnail;
 
-    private String reviewAvg;
+    private Double averageStar;
 
-    private String reviewCount;
+    private Long reviewCount;
 
     private String information;
 }
