@@ -31,8 +31,8 @@ public class QnaService {
 
     @Transactional
     public Long registerQuestion(Long memberId, QuestionCreateRequest questionCreateRequest) {
-        if(!lectureService.isExist(memberId, questionCreateRequest.getLectureId())){
-            throw new BaseException(LectureError.LECTURE_FORBIDDEN);
+        if(!lectureService.isStudent(memberId, questionCreateRequest.getLectureId())){
+            throw new BaseException(LectureError.LECTURE_NOT_STUDENT);
         }
         LectureQuestion lectureQuestion = LectureQuestion.builder()
                 .lectureId(questionCreateRequest.getLectureId())

@@ -2,6 +2,7 @@ package com.lgcms.lecture.service;
 
 import com.lgcms.lecture.common.dto.exception.BaseException;
 import com.lgcms.lecture.common.dto.exception.LectureError;
+import com.lgcms.lecture.common.kafka.dto.LectureUploadDto;
 import com.lgcms.lecture.domain.Lecture;
 import com.lgcms.lecture.domain.LectureEnrollment;
 import com.lgcms.lecture.domain.Student;
@@ -106,6 +107,7 @@ public class LectureService {
                 .description(lecture.getDescription())
                 .lectureId(lecture.getId())
                 .thumbnail(lecture.getThumbnail())
+                .textbook(lecture.getTextbook())
                 .title(lecture.getTitle())
                 .information(lecture.getInformation())
                 .build();
@@ -148,7 +150,7 @@ public class LectureService {
 
     //수강생 인증
     @Transactional
-    public boolean isExist(Long memberId, String lectureId) {
+    public boolean isStudent(Long memberId, String lectureId) {
 
         return lectureEnrollmentRepository.existsByLectureIdAndStudent_MemberId(lectureId, memberId);
     }
@@ -188,5 +190,26 @@ public class LectureService {
                                 .thumbnail(lecture.getThumbnail())
                                 .build()
                 ).toList();
+    }
+
+    @Transactional
+    public List<LectureResponseDto> getStudentLectures(String memberId) {
+
+        List<LectureEnrollment> enrollments = lectureEnrollmentRepository.findByMemberIdWithLecture(Long.parseLong(memberId));
+
+        return enrollments.stream().map(enrollment -> LectureResponseDto.builder()
+                .thumbnail(enrollment.getLecture().getThumbnail())
+                .title(enrollment.getLecture().getTitle())
+                .lectureId(enrollment.getLecture().getId())
+                .nickname(enrollment.getLecture().getNickname())
+                .build()
+        ).toList();
+    }
+
+    @Transactional
+    public void updateThumbnailAndTextbook(LectureUploadDto lectureUploadDto){
+        Lecture lecture = lectureRepository.findById(lectureUploadDto.getLectureId())
+                .orElseThrow(()-> new BaseException(LectureError.LECTURE_NOT_FOUND));
+        lecture.updateThumbnailAndTextbook(lectureUploadDto.getThumbnailKey(),lectureUploadDto.getBookKey());
     }
 }

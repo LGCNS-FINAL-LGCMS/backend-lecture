@@ -38,6 +38,8 @@ public class Lecture {
 
     private String thumbnail;
 
+    private String textbook;
+
     private Long price;
 
     private Long totalAmount;
@@ -76,6 +78,11 @@ public class Lecture {
 
     public void modifyTotalAmount(Long rate){
         this.totalAmount += rate;
+    }
+
+    public void updateThumbnailAndTextbook(String thumbnail, String textbook){
+        this.textbook = textbook;
+        this.thumbnail = thumbnail;
     }
 
     public void modifyLecture(LectureModifyDto dto){
