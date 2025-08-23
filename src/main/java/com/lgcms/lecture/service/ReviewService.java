@@ -32,6 +32,8 @@ public class ReviewService {
                 .lectureId(lectureId)
                 .memberId(memberId)
                 .star(reviewCreateRequest.getStar())
+                .comment(reviewCreateRequest.getComment())
+                .nickname(reviewCreateRequest.getNickname())
                 .suggestion(reviewCreateRequest.getSuggestion())
                 .reviewContents(new ArrayList<>())
                 .build();

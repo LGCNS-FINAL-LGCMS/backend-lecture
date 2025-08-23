@@ -14,13 +14,12 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/review")
 @Slf4j
 public class ReviewController {
 
     private final ReviewService reviewService;
 
-    @PostMapping("/{id}")
+    @PostMapping("/student/review/{id}")
     public ResponseEntity<BaseResponse> registerReview(@PathVariable("id") String lectureId,
                                                        @RequestBody ReviewCreateRequest reviewCreateRequest,
                                                        @RequestHeader("X-USER-ID") Long memberId){
@@ -28,17 +27,16 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponse.ok(null));
     }
 
-    @GetMapping("/list/{id}")
-    public ResponseEntity<BaseResponse> getAllReview(@PathVariable("id") String lectureId,
+    @GetMapping("/review/list/{id}")
+    public ResponseEntity<BaseResponse<List<ReviewResponse>>> getAllReview(@PathVariable("id") String lectureId,
                                                      @RequestHeader("X-USER-ID") Long memberId){
         List<ReviewResponse> reviewResponseList = reviewService.getAllReviews(lectureId);
 
         return ResponseEntity.ok(BaseResponse.ok(reviewResponseList));
     }
 
-    @GetMapping("")
-    public ResponseEntity<BaseResponse> getReview(@PathVariable("id") String lectureId,
-                                                  @RequestHeader("X-USER-ID") Long memberId){
+    @GetMapping("/review")
+    public ResponseEntity<BaseResponse<List<ReviewResponse>>> getReview(@RequestHeader("X-USER-ID") Long memberId){
         List<ReviewResponse> reviewResponseList = reviewService.getReview(memberId);
 
         return ResponseEntity.ok(BaseResponse.ok(reviewResponseList));

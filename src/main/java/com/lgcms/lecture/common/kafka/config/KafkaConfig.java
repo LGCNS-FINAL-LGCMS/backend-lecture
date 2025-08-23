@@ -28,6 +28,7 @@ public class KafkaConfig {
     private String bootstrapServer;
     @Value("${spring.kafka.consumer.group-id}")
     private String groupId;
+
     @Bean
     public ObjectMapper objectMapper() {
         return new ObjectMapper()

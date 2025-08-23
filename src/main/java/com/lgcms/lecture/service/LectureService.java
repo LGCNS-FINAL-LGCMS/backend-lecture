@@ -42,9 +42,7 @@ public class LectureService {
     public String saveLecture(LectureRequestDto lectureRequestDto, Long memberId) {
         String lectureId = UUID.randomUUID()+lectureRequestDto.getTitle();
         lectureRepository.save(Lecture.builder()
-                        .lectureStatus(LectureStatus.SUBMITTED)
-                        .imageStatus(ImageStatus.ENCODING)
-                        .videoStatus(VideoStatus.ENCODING)
+                        .lectureStatus(LectureStatus.HIDDEN)
                         .id(lectureId)
                         .memberId(memberId)
                         .description(lectureRequestDto.getDescription())
@@ -65,7 +63,6 @@ public class LectureService {
     @Transactional
     public Page<LectureResponseDto> getLectureList(Pageable pageable, String keyword, String category) {
         Page<Lecture> lectureList;
-//                = lectureRepository.findAll(pageable);
         if(keyword != null && category != null && !keyword.isBlank() && !category.isBlank()){
             lectureList = lectureRepository.findAllByKeywordAndCategory(keyword,category,pageable);
         }else if(keyword != null && !keyword.isBlank()){
@@ -92,14 +89,16 @@ public class LectureService {
 
     @Transactional
     public String modifyLectureStatus(LectureStatusDto lectureStatusDto){
-        Lecture lecture = lectureRepository.findById(lectureStatusDto.getLectureId()).orElseThrow(() -> new BaseException(LectureError.LECTURE_NOT_FOUND));
-        lecture.modifyLectureStatus(LectureStatus.valueOf(lectureStatusDto.getLectureStatus()));
+        Lecture lecture = lectureRepository.findById(lectureStatusDto.getLectureId())
+                .orElseThrow(() -> new BaseException(LectureError.LECTURE_NOT_FOUND));
+        lecture.modifyLectureStatus();
         return lectureStatusDto.getLectureStatus();
     }
 
     @Transactional
-    public LectureResponseDto getLecture(String lectureId, Long memberId) {
-        Lecture lecture = lectureRepository.findById(lectureId).orElseThrow(() -> new BaseException(LectureError.LECTURE_NOT_FOUND));
+    public LectureResponseDto getLecture(String lectureId) {
+        Lecture lecture = lectureRepository.findById(lectureId)
+                .orElseThrow(() -> new BaseException(LectureError.LECTURE_NOT_FOUND));
 
         return LectureResponseDto.builder()
                 .price(lecture.getPrice())
@@ -129,7 +128,7 @@ public class LectureService {
         LectureEnrollment lectureEnrollment = LectureEnrollment.builder()
                 .enrollmentStatus(EnrollmentStatus.ENROLLED)
                 .lecture(lecture)
-                .enrolledAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now())
                 .memberId(memberId)
                 .build();
 
@@ -193,17 +192,17 @@ public class LectureService {
     }
 
     @Transactional
-    public List<LectureResponseDto> getStudentLectures(String memberId) {
+    public Page<LectureResponseDto> getStudentLectures(Long memberId, Pageable pageable) {
 
-        List<LectureEnrollment> enrollments = lectureEnrollmentRepository.findByMemberIdWithLecture(Long.parseLong(memberId));
+        Page<LectureEnrollment> enrollments = lectureEnrollmentRepository.findByMemberIdWithLecture(memberId, pageable);
 
-        return enrollments.stream().map(enrollment -> LectureResponseDto.builder()
+        return enrollments.map(enrollment -> LectureResponseDto.builder()
                 .thumbnail(enrollment.getLecture().getThumbnail())
                 .title(enrollment.getLecture().getTitle())
                 .lectureId(enrollment.getLecture().getId())
                 .nickname(enrollment.getLecture().getNickname())
                 .build()
-        ).toList();
+        );
     }
 
     @Transactional
@@ -211,5 +210,22 @@ public class LectureService {
         Lecture lecture = lectureRepository.findById(lectureUploadDto.getLectureId())
                 .orElseThrow(()-> new BaseException(LectureError.LECTURE_NOT_FOUND));
         lecture.updateThumbnailAndTextbook(lectureUploadDto.getThumbnailKey(),lectureUploadDto.getBookKey());
+    }
+
+    @Transactional
+    public Page<LectureResponseDto> getLecturerLectures(Long memberId, Pageable pageable) {
+        Page<Lecture> lectures = lectureRepository.findAllByMemberId(memberId, pageable);
+
+        return lectures.map(lecture -> LectureResponseDto.builder()
+                .lectureId(lecture.getId())
+                .description(lecture.getDescription())
+                .nickname(lecture.getNickname())
+                .title(lecture.getTitle())
+                .price(lecture.getPrice())
+                .thumbnail(lecture.getThumbnail())
+                .information(lecture.getInformation())
+                .averageStar(lecture.getAverageStar())
+                .reviewCount(lecture.getReviewCount())
+                .build());
     }
 }

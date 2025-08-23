@@ -1,6 +1,8 @@
 package com.lgcms.lecture.repository;
 
 import com.lgcms.lecture.domain.LectureEnrollment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,5 +21,5 @@ public interface LectureEnrollmentRepository extends JpaRepository<LectureEnroll
     join fetch le.lecture
     where le.memberId = :memberId
 """)
-    List<LectureEnrollment> findByMemberIdWithLecture(@Param("memberId") Long memberId);
+    Page<LectureEnrollment> findByMemberIdWithLecture(@Param("memberId") Long memberId, Pageable pageable);
 }

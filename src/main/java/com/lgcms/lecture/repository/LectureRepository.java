@@ -25,6 +25,7 @@ public interface LectureRepository extends JpaRepository<Lecture, String> {
                 FROM Lecture l
                 WHERE l.title LIKE CONCAT('%', :keyword, '%')
                   AND l.category LIKE CONCAT('%', :category, '%')
+                  AND l.lectureStatus = 'APPROVED'
             """)
     Page<Lecture> findAllByKeywordAndCategory(@Param("keyword") String keyword, @Param("category") String category, Pageable pageable);
 
@@ -32,6 +33,7 @@ public interface LectureRepository extends JpaRepository<Lecture, String> {
             SELECT l
             FROM Lecture l
             WHERE l.title LIKE CONCAT('%', :keyword, '%')
+                AND l.lectureStatus = 'APPROVED'
             """)
     Page<Lecture> findByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
@@ -39,6 +41,14 @@ public interface LectureRepository extends JpaRepository<Lecture, String> {
             SELECT l
             FROM Lecture l
             WHERE l.category LIKE CONCAT('%', :category, '%')
+                AND l.lectureStatus = 'APPROVED'
             """)
     Page<Lecture> findByCategoryAsPage(@Param("category") String category, Pageable pageable);
+
+    @Query(value= """
+            SELECT l
+            FROM Lecture l
+            WHERE l.memberId = :memberId
+            """)
+    Page<Lecture> findAllByMemberId(@Param("memberId") Long memberId, Pageable pageable);
 }

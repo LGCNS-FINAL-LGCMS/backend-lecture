@@ -14,5 +14,5 @@ public class KafkaEvent<T> {
     private String eventId;
     private String eventType;
     private String eventTime;
-    private LectureUploadDto data;
+    private T data;
 }
