@@ -2,8 +2,8 @@ package com.lgcms.lecture.common.kafka.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.lgcms.lecture.common.kafka.serializer.JsonKafkaDeserializer;
-import com.lgcms.lecture.common.kafka.serializer.JsonKafkaSerializer;
+import com.lgcms.lecture.common.kafka.util.serializer.JsonKafkaDeserializer;
+import com.lgcms.lecture.common.kafka.util.serializer.JsonKafkaSerializer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -16,7 +16,6 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.*;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
-import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -64,8 +63,11 @@ public class KafkaConfig {
 
     public <T> ConsumerFactory<String, T> consumerFactory(Class<T> valueType) {
         Map<String, Object> props = new HashMap<>(commonConsumerProps());
-        props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, valueType.getName());
-        return new DefaultKafkaConsumerFactory<>(props);
+        return new DefaultKafkaConsumerFactory<>(
+                props,
+                new StringDeserializer(),
+                new JsonKafkaDeserializer(valueType)
+        );
     }
 
     public <T> ConcurrentKafkaListenerContainerFactory<String, T> kafkaListenerContainerFactory(Class<T> valueType) {

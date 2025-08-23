@@ -1,4 +1,4 @@
-package com.lgcms.lecture.common.kafka.serializer;
+package com.lgcms.lecture.common.kafka.util.serializer;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;

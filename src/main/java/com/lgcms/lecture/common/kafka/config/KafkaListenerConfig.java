@@ -20,9 +20,4 @@ public class KafkaListenerConfig {
     public ConcurrentKafkaListenerContainerFactory<String, KafkaEvent> defaultFactory() {
         return kafkaConfig.kafkaListenerContainerFactory(KafkaEvent.class);
     }
-
-    @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, LectureUploadDto> anotherValueFactory() {
-        return kafkaConfig.kafkaListenerContainerFactory(LectureUploadDto.class);
-    }
 }
