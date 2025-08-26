@@ -62,6 +62,7 @@ public class Lecture {
         this.updatedAt = LocalDateTime.now();
         this.reviewCount = 0L;
         this.averageStar = 0.0;
+        this.totalPlaytime = 0;
     }
 
     public void modifyLectureStatus(){

@@ -102,9 +102,14 @@ public class LectureController {
         return ResponseEntity.ok(BaseResponse.ok(null));
     }
 
-    @GetMapping("/lecture/verify")
+    @GetMapping("/lecturer/lecture/verify")
     public ResponseEntity<BaseResponse<Boolean>> verifyLecture(@RequestHeader("X-USER-ID") Long memberId, @RequestParam String lectureId){
 
         return ResponseEntity.ok(BaseResponse.ok(lectureService.isLecturer(memberId, lectureId)));
+    }
+
+    @GetMapping("/student/lecture/verify")
+    public ResponseEntity<BaseResponse<Boolean>> verifyStudent(@RequestHeader("X-USER-ID") Long memberId, @RequestParam String lectureId){
+        return ResponseEntity.ok(BaseResponse.ok(lectureService.isStudent(memberId,lectureId)));
     }
 }

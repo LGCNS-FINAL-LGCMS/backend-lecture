@@ -1,5 +1,6 @@
 package com.lgcms.lecture.event.consumer;
 
+import com.lgcms.lecture.common.kafka.dto.EncodingSuccess;
 import com.lgcms.lecture.common.kafka.dto.KafkaEvent;
 import com.lgcms.lecture.common.kafka.dto.LectureUploadDto;
 import com.lgcms.lecture.common.kafka.util.KafkaEventFactory;
@@ -22,4 +23,10 @@ public class LectureUploadService {
         LectureUploadDto lectureUploadDto = kafkaEventFactory.convert(event, LectureUploadDto.class);
         lectureService.updateThumbnailAndTextbook(lectureUploadDto);
      }
+
+    @KafkaListener(topics = "ENCODING_SUCCESS", containerFactory = "defaultFactory")
+    public void EncodingSuccess(KafkaEvent<?> event){
+        EncodingSuccess encodingSuccess = kafkaEventFactory.convert(event, EncodingSuccess.class);
+        lectureService.updateTotalPlaytime(encodingSuccess);
+    }
 }

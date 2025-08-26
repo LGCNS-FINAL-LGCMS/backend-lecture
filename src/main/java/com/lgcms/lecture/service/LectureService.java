@@ -2,9 +2,11 @@ package com.lgcms.lecture.service;
 
 import com.lgcms.lecture.common.dto.exception.BaseException;
 import com.lgcms.lecture.common.dto.exception.LectureError;
+import com.lgcms.lecture.common.kafka.dto.EncodingSuccess;
 import com.lgcms.lecture.common.kafka.dto.LectureUploadDto;
 import com.lgcms.lecture.domain.Lecture;
 import com.lgcms.lecture.domain.LectureEnrollment;
+import com.lgcms.lecture.domain.LectureProgress;
 import com.lgcms.lecture.domain.Student;
 import com.lgcms.lecture.domain.type.EnrollmentStatus;
 import com.lgcms.lecture.domain.type.ImageStatus;
@@ -15,6 +17,7 @@ import com.lgcms.lecture.dto.request.lecture.LectureRequestDto;
 import com.lgcms.lecture.dto.request.lecture.LectureStatusDto;
 import com.lgcms.lecture.dto.response.lecture.LectureResponseDto;
 import com.lgcms.lecture.repository.LectureEnrollmentRepository;
+import com.lgcms.lecture.repository.LectureProgressRepository;
 import com.lgcms.lecture.repository.LectureRepository;
 import com.lgcms.lecture.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +40,7 @@ public class LectureService {
     private final LectureRepository lectureRepository;
     private final StudentRepository studentRepository;
     private final LectureEnrollmentRepository lectureEnrollmentRepository;
+    private final LectureProgressRepository lectureProgressRepository;
 
     @Transactional  //메타정보 저장 --> file service 에 썸네일 동영상 전달 후 처리
     public String saveLecture(LectureRequestDto lectureRequestDto, Long memberId) {
@@ -227,5 +231,13 @@ public class LectureService {
                 .averageStar(lecture.getAverageStar())
                 .reviewCount(lecture.getReviewCount())
                 .build());
+    }
+
+    @Transactional
+    public void updateTotalPlaytime(EncodingSuccess encodingSuccess){
+        Lecture lecture = lectureRepository.findById(encodingSuccess.getLectureId())
+                .orElseThrow(()-> new BaseException(LectureError.LECTURE_NOT_FOUND));
+        lecture.updateTotalPlaytime(encodingSuccess.getDuration());
+
     }
 }
