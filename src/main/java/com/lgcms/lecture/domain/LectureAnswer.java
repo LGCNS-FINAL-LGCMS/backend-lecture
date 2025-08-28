@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "lecture_answer")
 @Getter@Builder
@@ -19,6 +21,13 @@ public class LectureAnswer {
 
     @Column(length = 2000)
     private String content;
+
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    public void initAnswer(){
+        this.createdAt = LocalDateTime.now();
+    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lecture_question_id")

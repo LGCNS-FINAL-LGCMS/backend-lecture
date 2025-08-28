@@ -2,6 +2,7 @@ package com.lgcms.lecture.service;
 
 import com.lgcms.lecture.common.dto.exception.BaseException;
 import com.lgcms.lecture.common.dto.exception.LectureError;
+import com.lgcms.lecture.common.kafka.dto.EncodingStatus;
 import com.lgcms.lecture.common.kafka.dto.EncodingSuccess;
 import com.lgcms.lecture.common.kafka.dto.LectureUploadDto;
 import com.lgcms.lecture.domain.Lecture;
@@ -44,7 +45,7 @@ public class LectureService {
 
     @Transactional  //메타정보 저장 --> file service 에 썸네일 동영상 전달 후 처리
     public String saveLecture(LectureRequestDto lectureRequestDto, Long memberId) {
-        String lectureId = UUID.randomUUID()+lectureRequestDto.getTitle();
+        String lectureId = UUID.randomUUID()+"_"+lectureRequestDto.getTitle();
         lectureRepository.save(Lecture.builder()
                         .lectureStatus(LectureStatus.HIDDEN)
                         .id(lectureId)
@@ -107,6 +108,7 @@ public class LectureService {
         return LectureResponseDto.builder()
                 .price(lecture.getPrice())
                 .nickname(lecture.getNickname())
+                .averageStar(lecture.getAverageStar())
                 .description(lecture.getDescription())
                 .lectureId(lecture.getId())
                 .thumbnail(lecture.getThumbnail())
@@ -239,5 +241,14 @@ public class LectureService {
                 .orElseThrow(()-> new BaseException(LectureError.LECTURE_NOT_FOUND));
         lecture.updateTotalPlaytime(encodingSuccess.getDuration());
 
+        String[] parts = encodingSuccess.getLectureId().split("_", 2); // limit=2 로 나누기
+        String lectureName = parts[1];
+
+        EncodingStatus encodingStatus = EncodingStatus.builder()
+                .lectureId(encodingSuccess.getLectureId())
+                .memberId(encodingSuccess.getMemberId())
+                .lectureName(lectureName)
+                .status("성공")
+                .build();
     }
 }

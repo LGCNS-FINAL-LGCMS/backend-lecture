@@ -9,14 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EncodingSuccess {
+public class EncodingStatus {
 
-    private String status;
-    private Long memberId;
     private String lectureId;
-    private String lessonId;
-    private Integer duration;
-    private String videoUrl;
-    private String thumbnailUrl;
-
+    private Long memberId;
+    private String lectureName;
+    private String status;
 }

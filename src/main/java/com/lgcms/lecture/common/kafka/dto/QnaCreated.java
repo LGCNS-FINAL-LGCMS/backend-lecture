@@ -5,18 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @Builder
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class EncodingSuccess {
+public class QnaCreated {
 
-    private String status;
     private Long memberId;
-    private String lectureId;
-    private String lessonId;
-    private Integer duration;
-    private String videoUrl;
-    private String thumbnailUrl;
-
+    private Long qnaId;
+    private String lectureName;
 }
