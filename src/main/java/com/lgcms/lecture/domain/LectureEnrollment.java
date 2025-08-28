@@ -31,7 +31,7 @@ public class LectureEnrollment {
     @Enumerated(EnumType.STRING)
     private EnrollmentStatus enrollmentStatus;
 
-    private LocalDateTime enrolledAt;
+    private LocalDateTime createdAt;
 
     protected  void setStudent(Student student){
         this.student = student;

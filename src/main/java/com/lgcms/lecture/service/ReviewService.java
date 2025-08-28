@@ -7,11 +7,13 @@ import com.lgcms.lecture.domain.Review;
 import com.lgcms.lecture.domain.ReviewContent;
 import com.lgcms.lecture.dto.request.review.ReviewContentRequest;
 import com.lgcms.lecture.dto.request.review.ReviewCreateRequest;
-import com.lgcms.lecture.dto.response.ReviewResponse;
+import com.lgcms.lecture.dto.response.review.ReviewResponse;
 import com.lgcms.lecture.repository.LectureRepository;
 import com.lgcms.lecture.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +34,8 @@ public class ReviewService {
                 .lectureId(lectureId)
                 .memberId(memberId)
                 .star(reviewCreateRequest.getStar())
+                .comment(reviewCreateRequest.getComment())
+                .nickname(reviewCreateRequest.getNickname())
                 .suggestion(reviewCreateRequest.getSuggestion())
                 .reviewContents(new ArrayList<>())
                 .build();
@@ -52,31 +56,32 @@ public class ReviewService {
     }
 
     @Transactional
-    public List<ReviewResponse> getAllReviews(String lectureId) {
-        List<Review> reviewList = reviewRepository.findAllByLectureId(lectureId);
+    public Page<ReviewResponse> getAllReviews(String lectureId, Pageable pageable) {
+        Page<Review> reviewList = reviewRepository.findAllByLectureId(lectureId,pageable);
 
-        List<ReviewResponse> reviewResponseList = reviewList.stream()
+        Page<ReviewResponse> reviewResponseList = reviewList
                 .map(review -> ReviewResponse.builder()
                         .star(review.getStar())
                         .comment(review.getComment())
                         .nickname(review.getNickname())
                         .createdAt(review.getCreateAt())
                         .build()
-                ).toList();
+                );
         return reviewResponseList;
     }
 
     @Transactional
-    public List<ReviewResponse> getReview(Long memberId) {
-        List<Review> reviewList = reviewRepository.findAllByMemberId(memberId);
+    public Page<ReviewResponse> getReview(Long memberId, Pageable pageable) {
+        Page<Review> reviewList = reviewRepository.findAllByMemberId(memberId, pageable);
 
-        List<ReviewResponse> reviewResponseList = reviewList.stream()
+        Page<ReviewResponse> reviewResponseList = reviewList
                 .map(review -> ReviewResponse.builder()
                         .star(review.getStar())
                         .comment(review.getComment())
                         .nickname(review.getNickname())
+                        .createdAt(review.getCreateAt())
                         .build()
-                ).toList();
+                );
 
         return reviewResponseList;
     }

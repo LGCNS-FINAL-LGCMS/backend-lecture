@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +29,13 @@ public class LectureQuestion {
 
     @Column(length = 2000)
     private String content;
+
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    public void initQuestion(){
+        this.createdAt = LocalDateTime.now();
+    }
 
     @OneToMany(mappedBy = "lectureQuestion", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LectureAnswer> lectureAnswers;

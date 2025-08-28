@@ -4,6 +4,8 @@ import lombok.*;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class LectureResponseDto {
 
     private String lectureId;
@@ -17,6 +19,8 @@ public class LectureResponseDto {
     private Long price;
 
     private String thumbnail;
+
+    private String textbook;
 
     private Double averageStar;
 

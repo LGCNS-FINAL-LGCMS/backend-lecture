@@ -38,22 +38,20 @@ public class Lecture {
 
     private String thumbnail;
 
+    private String textbook;
+
     private Long price;
 
     private Long totalAmount;
+
+    private Integer totalPlaytime;
 
     private Long reviewCount;
 
     private Double averageStar;
 
     @Enumerated(EnumType.STRING)
-    private VideoStatus videoStatus;
-
-    @Enumerated(EnumType.STRING)
     private LectureStatus lectureStatus;
-
-    @Enumerated(EnumType.STRING)
-    private ImageStatus imageStatus;
 
     private LocalDateTime createdAt;
 
@@ -64,18 +62,20 @@ public class Lecture {
         this.updatedAt = LocalDateTime.now();
         this.reviewCount = 0L;
         this.averageStar = 0.0;
+        this.totalPlaytime = 0;
     }
 
-    public void modifyLectureStatus(LectureStatus lectureStatus){
-        this.lectureStatus  = lectureStatus;
-    }
-
-    public void modifyVideoStatus(VideoStatus videoStatus){
-        this.videoStatus = videoStatus;
+    public void modifyLectureStatus(){
+        this.lectureStatus  = LectureStatus.APPROVED;
     }
 
     public void modifyTotalAmount(Long rate){
         this.totalAmount += rate;
+    }
+
+    public void updateThumbnailAndTextbook(String thumbnail, String textbook){
+        this.textbook = textbook;
+        this.thumbnail = thumbnail;
     }
 
     public void modifyLecture(LectureModifyDto dto){
@@ -92,5 +92,9 @@ public class Lecture {
     public void updateReview(Integer star){
         this.averageStar = ((this.averageStar * this.reviewCount) + star) / (this.reviewCount + 1);
         this.reviewCount++;
+    }
+
+    public void updateTotalPlaytime(int addPlaytime){
+        this.totalPlaytime += addPlaytime;
     }
 }

@@ -9,73 +9,72 @@ import com.lgcms.lecture.dto.response.qna.QnaListResponse;
 import com.lgcms.lecture.service.QnaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("api/qna")
 @RequiredArgsConstructor
 @Slf4j
 public class QnaController {
 
     private final QnaService qnaService;
 
-    @PostMapping("")
-    public ResponseEntity<BaseResponse> registerQuestion(@RequestBody QuestionCreateRequest questionCreateRequest,
-                                                         @RequestHeader("X-USER-ID") String id){
-        Long memberId = Long.parseLong("1");
-        Long qnaId = qnaService.registerQuestion(memberId,questionCreateRequest);
+    @PostMapping("/student/qna")
+    public ResponseEntity<BaseResponse<Long>> registerQuestion(@RequestBody QuestionCreateRequest questionCreateRequest,
+                                                               @RequestHeader("X-USER-ID") Long memberId) {
+        Long qnaId = qnaService.registerQuestion(memberId, questionCreateRequest);
 
         return ResponseEntity.ok(BaseResponse.ok(qnaId));
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/student/qna/{id}")
     public ResponseEntity<BaseResponse> updateQuestion(@PathVariable("id") Long questionId,
                                                        @RequestBody QuestionUpdateRequest questionUpdateRequest,
-                                                       @RequestHeader("X-USER-ID") String id){
-        Long memberId = Long.parseLong("1");
-        qnaService.updateQuestion(memberId,questionId, questionUpdateRequest);
+                                                       @RequestHeader("X-USER-ID") Long memberId) {
+        qnaService.updateQuestion(memberId, questionId, questionUpdateRequest);
         return ResponseEntity.ok(BaseResponse.ok(null));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("student/qna/{id}")
     public ResponseEntity<BaseResponse> deleteQuestion(@PathVariable("id") Long questionId,
-                                                       @RequestHeader("X-USER-ID") String id){
-        Long memberId = Long.parseLong("1");
-        qnaService.deleteQuestion(memberId,questionId);
+                                                       @RequestHeader("X-USER-ID") Long memberId) {
+        qnaService.deleteQuestion(memberId, questionId);
         return ResponseEntity.ok(BaseResponse.ok(null));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<BaseResponse> getQnaList(@PathVariable("id") String lectureId){
-        List<QnaListResponse> qnaListResponse = qnaService.getQnaList(lectureId);
+    @GetMapping("/qna/{id}")
+    public ResponseEntity<BaseResponse<Page<QnaListResponse>>> getQnaList(@PathVariable("id") String lectureId,
+                                                                          @PageableDefault(size = 12, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        Page<QnaListResponse> qnaListResponse = qnaService.getQnaList(lectureId, pageable);
         return ResponseEntity.ok(BaseResponse.ok(qnaListResponse));
     }
 
-    @GetMapping("/member")
-    public ResponseEntity<BaseResponse> getMemberQnaList(@RequestHeader("X-USER-ID") String id){
-        Long memberId = Long.parseLong("1");
+    @GetMapping("/student/qna/member")
+    public ResponseEntity<BaseResponse<List<QnaListResponse>>> getMemberQnaList(@RequestHeader("X-USER-ID") Long memberId) {
         List<QnaListResponse> qnaListResponse = qnaService.getMemberQnaList(memberId);
         return ResponseEntity.ok(BaseResponse.ok(qnaListResponse));
     }
 
-    @PostMapping("/answer/{id}")
+    @PostMapping("/lecturer/qna/answer/{id}")
     public ResponseEntity<BaseResponse> registerAnswer(@PathVariable("id") Long questionId,
                                                        @RequestBody AnswerRequest answerCreateRequest,
-                                                       @RequestHeader("X-USER-ID") String id){
-        Long memberId = Long.parseLong("1");
-        qnaService.registerAnswer(questionId,memberId,answerCreateRequest);
+                                                       @RequestHeader("X-USER-ID") Long memberId) {
+        qnaService.registerAnswer(questionId, memberId, answerCreateRequest);
         return ResponseEntity.ok(BaseResponse.ok(null));
     }
 
-    @PutMapping("/answer/{id}")
+    @PutMapping("/lecturer/qna/answer/{id}")
     public ResponseEntity<BaseResponse> updateAnswer(@PathVariable("id") Long answerId,
                                                      @RequestBody AnswerRequest answerRequest,
-                                                     @RequestHeader("X-USER-ID") String id){
-        Long memberId = Long.parseLong("1");
-        qnaService.updateAnswer(memberId, answerId,answerRequest);
+                                                     @RequestHeader("X-USER-ID") Long memberId) {
+        qnaService.updateAnswer(memberId, answerId, answerRequest);
         return ResponseEntity.ok(BaseResponse.ok(null));
     }
 }
