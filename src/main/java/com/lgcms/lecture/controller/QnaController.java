@@ -25,7 +25,7 @@ public class QnaController {
 
     private final QnaService qnaService;
 
-    @PostMapping("/student/qna")
+    @PostMapping("/student//lecture/qna")
     public ResponseEntity<BaseResponse<Long>> registerQuestion(@RequestBody QuestionCreateRequest questionCreateRequest,
                                                                @RequestHeader("X-USER-ID") Long memberId) {
         Long qnaId = qnaService.registerQuestion(memberId, questionCreateRequest);
@@ -33,7 +33,7 @@ public class QnaController {
         return ResponseEntity.ok(BaseResponse.ok(qnaId));
     }
 
-    @PatchMapping("/student/qna/{id}")
+    @PatchMapping("/student/lecture/qna/{id}")
     public ResponseEntity<BaseResponse> updateQuestion(@PathVariable("id") Long questionId,
                                                        @RequestBody QuestionUpdateRequest questionUpdateRequest,
                                                        @RequestHeader("X-USER-ID") Long memberId) {
@@ -41,14 +41,14 @@ public class QnaController {
         return ResponseEntity.ok(BaseResponse.ok(null));
     }
 
-    @DeleteMapping("student/qna/{id}")
+    @DeleteMapping("/student/lecture/qna/{id}")
     public ResponseEntity<BaseResponse> deleteQuestion(@PathVariable("id") Long questionId,
                                                        @RequestHeader("X-USER-ID") Long memberId) {
         qnaService.deleteQuestion(memberId, questionId);
         return ResponseEntity.ok(BaseResponse.ok(null));
     }
 
-    @GetMapping("/qna/{id}")
+    @GetMapping("/lecture/qna/{id}")
     public ResponseEntity<BaseResponse<Page<QnaListResponse>>> getQnaList(@PathVariable("id") String lectureId,
                                                                           @PageableDefault(size = 12, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
@@ -56,13 +56,13 @@ public class QnaController {
         return ResponseEntity.ok(BaseResponse.ok(qnaListResponse));
     }
 
-    @GetMapping("/student/qna/member")
+    @GetMapping("/student/lecture/qna/member")
     public ResponseEntity<BaseResponse<List<QnaListResponse>>> getMemberQnaList(@RequestHeader("X-USER-ID") Long memberId) {
         List<QnaListResponse> qnaListResponse = qnaService.getMemberQnaList(memberId);
         return ResponseEntity.ok(BaseResponse.ok(qnaListResponse));
     }
 
-    @PostMapping("/lecturer/qna/answer/{id}")
+    @PostMapping("/lecturer/lecture/qna/answer/{id}")
     public ResponseEntity<BaseResponse> registerAnswer(@PathVariable("id") Long questionId,
                                                        @RequestBody AnswerRequest answerCreateRequest,
                                                        @RequestHeader("X-USER-ID") Long memberId) {
@@ -70,7 +70,7 @@ public class QnaController {
         return ResponseEntity.ok(BaseResponse.ok(null));
     }
 
-    @PutMapping("/lecturer/qna/answer/{id}")
+    @PutMapping("/lecturer/lecture/qna/answer/{id}")
     public ResponseEntity<BaseResponse> updateAnswer(@PathVariable("id") Long answerId,
                                                      @RequestBody AnswerRequest answerRequest,
                                                      @RequestHeader("X-USER-ID") Long memberId) {
