@@ -132,7 +132,7 @@ public class LectureService {
                 .orElseThrow(() -> new BaseException(LectureError.LECTURE_NOT_FOUND));
 
         LectureEnrollment lectureEnrollment = LectureEnrollment.builder()
-                .enrollmentStatus(EnrollmentStatus.ENROLLED)
+                .enrollmentStatus(EnrollmentStatus.PENDING)
                 .lecture(lecture)
                 .createdAt(LocalDateTime.now())
                 .memberId(memberId)
