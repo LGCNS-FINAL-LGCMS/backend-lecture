@@ -32,11 +32,11 @@ public class Review {
     @Column(columnDefinition = "text")
     private String suggestion;
 
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
     @PrePersist
     public void setDate(){
-        this.createAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
     }
 
     @OneToMany(mappedBy = "review", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.REMOVE)

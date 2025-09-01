@@ -64,7 +64,7 @@ public class ReviewService {
                         .star(review.getStar())
                         .comment(review.getComment())
                         .nickname(review.getNickname())
-                        .createdAt(review.getCreateAt())
+                        .createdAt(review.getCreatedAt())
                         .build()
                 );
         return reviewResponseList;
@@ -79,7 +79,7 @@ public class ReviewService {
                         .star(review.getStar())
                         .comment(review.getComment())
                         .nickname(review.getNickname())
-                        .createdAt(review.getCreateAt())
+                        .createdAt(review.getCreatedAt())
                         .build()
                 );
 
