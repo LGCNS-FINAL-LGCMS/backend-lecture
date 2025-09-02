@@ -42,3 +42,10 @@ spring:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       properties:
         spring.json.add.type.headers: false
+
+  cloud:
+    openfeign:
+      client:
+        config:
+          RemoteLessonService:
+            url: http://localhost:38107
