@@ -18,11 +18,11 @@ public interface LectureEnrollmentRepository extends JpaRepository<LectureEnroll
     boolean existsByLectureIdAndStudent_MemberId(String lectureId, Long memberId);
 
     @Query("""
-    select le 
-    from LectureEnrollment le
-    join fetch le.lecture
-    where le.memberId = :memberId
-""")
+                select le 
+                from LectureEnrollment le
+                join fetch le.lecture
+                where le.memberId = :memberId
+            """)
     Page<LectureEnrollment> findByMemberIdWithLecture(@Param("memberId") Long memberId, Pageable pageable);
 
     @Modifying
@@ -31,13 +31,15 @@ public interface LectureEnrollmentRepository extends JpaRepository<LectureEnroll
 
 
     @Query("""
-            SELECT er.id as id,
-                   er.memberId as memberId,
-                   er.createdAt as enrolledAt
-                   lt.id as lectureId
-            FROM LectureEnrollment er
-            LEFT JOIN er.lecture lt
-            
-            """)
+    SELECT new com.lgcms.lecture.dto.internal.LectureEnrollmentsResponse(
+        er.id,
+        er.memberId,
+        lt.id,
+        er.createdAt
+    )
+    FROM LectureEnrollment er
+    LEFT JOIN er.lecture lt
+    """)
     List<LectureEnrollmentsResponse> findAllEnrollment();
+
 }
