@@ -107,7 +107,7 @@ public class LectureController {
     //강의 등록 취소
     @DeleteMapping("/student/lecture/withdraw/{id}")
     public ResponseEntity<BaseResponse> withdrawLecture(@PathVariable("id") String lectureId,
-                                                        @RequestHeader("X=USER-ID") Long memberId){
+                                                        @RequestHeader("X-USER-ID") Long memberId){
         lectureService.withdrawLecture(memberId,lectureId);
         return ResponseEntity.ok(BaseResponse.ok(null));
     }
