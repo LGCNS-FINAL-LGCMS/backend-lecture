@@ -33,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -108,7 +109,10 @@ public class LectureService {
         Lecture lecture = lectureRepository.findById(lectureId)
                 .orElseThrow(() -> new BaseException(LectureError.LECTURE_NOT_FOUND));
 
-        LectureProgress progress = lectureProgressRepository.findByMemberIdAndLectureId(memberId, lectureId);
+        Optional<LectureProgress> lectureProgress = lectureProgressRepository.findByMemberIdAndLectureId(memberId, lectureId);
+        Integer progress = null;
+
+        if(lectureProgress.isPresent()) progress = lectureProgress.get().getProgress();
 
         boolean isStudent = isStudent(memberId, lectureId);
 
@@ -278,7 +282,7 @@ public class LectureService {
 
         int percent = lecture.getTotalPlaytime() / progressUpdate.getPlaytime() * 100;
 
-        LectureProgress progress = lectureProgressRepository.findByMemberIdAndLectureId(progressUpdate.getMemberId(), progressUpdate.getLectureId());
+        LectureProgress progress = lectureProgressRepository.findByMemberIdAndLectureId(progressUpdate.getMemberId(), progressUpdate.getLectureId()).get();
 
         progress.updateProgress(percent);
         progress.updateLastWatched(progressUpdate.getLessonId());
