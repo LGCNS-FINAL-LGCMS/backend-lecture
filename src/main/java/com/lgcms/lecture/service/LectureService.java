@@ -5,22 +5,24 @@ import com.lgcms.lecture.common.dto.exception.LectureError;
 import com.lgcms.lecture.common.kafka.dto.EncodingStatus;
 import com.lgcms.lecture.common.kafka.dto.EncodingSuccess;
 import com.lgcms.lecture.common.kafka.dto.LectureUploadDto;
+import com.lgcms.lecture.common.kafka.dto.ProgressUpdate;
 import com.lgcms.lecture.domain.Lecture;
 import com.lgcms.lecture.domain.LectureEnrollment;
 import com.lgcms.lecture.domain.LectureProgress;
 import com.lgcms.lecture.domain.Student;
 import com.lgcms.lecture.domain.type.EnrollmentStatus;
-import com.lgcms.lecture.domain.type.ImageStatus;
 import com.lgcms.lecture.domain.type.LectureStatus;
-import com.lgcms.lecture.domain.type.VideoStatus;
 import com.lgcms.lecture.dto.request.lecture.LectureModifyDto;
 import com.lgcms.lecture.dto.request.lecture.LectureRequestDto;
 import com.lgcms.lecture.dto.request.lecture.LectureStatusDto;
+import com.lgcms.lecture.dto.response.lecture.LectureInfoResponse;
 import com.lgcms.lecture.dto.response.lecture.LectureResponseDto;
+import com.lgcms.lecture.dto.response.lesson.LessonResponse;
 import com.lgcms.lecture.repository.LectureEnrollmentRepository;
 import com.lgcms.lecture.repository.LectureProgressRepository;
 import com.lgcms.lecture.repository.LectureRepository;
 import com.lgcms.lecture.repository.StudentRepository;
+import com.lgcms.lecture.service.internal.LessonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -42,25 +44,26 @@ public class LectureService {
     private final StudentRepository studentRepository;
     private final LectureEnrollmentRepository lectureEnrollmentRepository;
     private final LectureProgressRepository lectureProgressRepository;
+    private final LessonService lessonService;
 
     @Transactional  //메타정보 저장 --> file service 에 썸네일 동영상 전달 후 처리
     public String saveLecture(LectureRequestDto lectureRequestDto, Long memberId) {
-        String lectureId = UUID.randomUUID()+"_"+lectureRequestDto.getTitle();
+        String lectureId = UUID.randomUUID() + "_" + lectureRequestDto.getTitle();
         lectureRepository.save(Lecture.builder()
-                        .lectureStatus(LectureStatus.HIDDEN)
-                        .id(lectureId)
-                        .memberId(memberId)
-                        .description(lectureRequestDto.getDescription())
-                        .nickname(lectureRequestDto.getNickname())
-                        .category(lectureRequestDto.getCategory())
-                        .price(lectureRequestDto.getPrice())
-                        .title(lectureRequestDto.getTitle())
-                        .level(lectureRequestDto.getLevel())
-                        .information(lectureRequestDto.getInformation())
-                        .createdAt(LocalDateTime.now())
+                .lectureStatus(LectureStatus.HIDDEN)
+                .id(lectureId)
+                .memberId(memberId)
+                .description(lectureRequestDto.getDescription())
+                .nickname(lectureRequestDto.getNickname())
+                .category(lectureRequestDto.getCategory())
+                .price(lectureRequestDto.getPrice())
+                .title(lectureRequestDto.getTitle())
+                .level(lectureRequestDto.getLevel())
+                .information(lectureRequestDto.getInformation())
+                .createdAt(LocalDateTime.now())
                 .build());
 
-        joinLecture(memberId,lectureId);
+        joinLecture(memberId, lectureId);
 
         return lectureId;
     }
@@ -68,32 +71,32 @@ public class LectureService {
     @Transactional
     public Page<LectureResponseDto> getLectureList(Pageable pageable, String keyword, String category) {
         Page<Lecture> lectureList;
-        if(keyword != null && category != null && !keyword.isBlank() && !category.isBlank()){
-            lectureList = lectureRepository.findAllByKeywordAndCategory(keyword,category,pageable);
-        }else if(keyword != null && !keyword.isBlank()){
+        if (keyword != null && category != null && !keyword.isBlank() && !category.isBlank()) {
+            lectureList = lectureRepository.findAllByKeywordAndCategory(keyword, category, pageable);
+        } else if (keyword != null && !keyword.isBlank()) {
             lectureList = lectureRepository.findByKeyword(keyword, pageable);
-        }else if(category != null && !category.isBlank()){
+        } else if (category != null && !category.isBlank()) {
             lectureList = lectureRepository.findByCategoryAsPage(category, pageable);
-        }else{
+        } else {
             lectureList = lectureRepository.findAll(pageable);
         }
         return lectureList
                 .map(lecture -> LectureResponseDto.builder()
-                                .lectureId(lecture.getId())
-                                .description(lecture.getDescription())
-                                .nickname(lecture.getNickname())
-                                .title(lecture.getTitle())
-                                .price(lecture.getPrice())
-                                .thumbnail(lecture.getThumbnail())
-                                .information(lecture.getInformation())
-                                .averageStar(lecture.getAverageStar())
-                                .reviewCount(lecture.getReviewCount())
-                                .build()
-                                                );
+                        .lectureId(lecture.getId())
+                        .description(lecture.getDescription())
+                        .nickname(lecture.getNickname())
+                        .title(lecture.getTitle())
+                        .price(lecture.getPrice())
+                        .thumbnail(lecture.getThumbnail())
+                        .information(lecture.getInformation())
+                        .averageStar(lecture.getAverageStar())
+                        .reviewCount(lecture.getReviewCount())
+                        .build()
+                );
     }
 
     @Transactional
-    public String modifyLectureStatus(LectureStatusDto lectureStatusDto){
+    public String modifyLectureStatus(LectureStatusDto lectureStatusDto) {
         Lecture lecture = lectureRepository.findById(lectureStatusDto.getLectureId())
                 .orElseThrow(() -> new BaseException(LectureError.LECTURE_NOT_FOUND));
         lecture.modifyLectureStatus();
@@ -101,11 +104,15 @@ public class LectureService {
     }
 
     @Transactional
-    public LectureResponseDto getLecture(String lectureId) {
+    public LectureInfoResponse getLecture(String lectureId, Long memberId) {
         Lecture lecture = lectureRepository.findById(lectureId)
                 .orElseThrow(() -> new BaseException(LectureError.LECTURE_NOT_FOUND));
 
-        return LectureResponseDto.builder()
+        boolean isStudent = isStudent(memberId, lectureId);
+
+        List<LessonResponse> lessonResponses = lessonService.getLessons(lectureId);
+
+        LectureResponseDto lectureResponseDto = LectureResponseDto.builder()
                 .price(lecture.getPrice())
                 .nickname(lecture.getNickname())
                 .averageStar(lecture.getAverageStar())
@@ -115,6 +122,14 @@ public class LectureService {
                 .textbook(lecture.getTextbook())
                 .title(lecture.getTitle())
                 .information(lecture.getInformation())
+                .build();
+
+
+
+        return LectureInfoResponse.builder()
+                .lectureResponseDto(lectureResponseDto)
+                .lessonResponses(lessonResponses)
+                .isStudent(isStudent)
                 .build();
     }
 
@@ -127,7 +142,7 @@ public class LectureService {
     }
 
     @Transactional
-    public String joinLecture(Long memberId, String lectureId){
+    public String joinLecture(Long memberId, String lectureId) {
         Lecture lecture = lectureRepository.findById(lectureId)
                 .orElseThrow(() -> new BaseException(LectureError.LECTURE_NOT_FOUND));
 
@@ -162,7 +177,7 @@ public class LectureService {
 
     //강사 인증
     @Transactional
-    public boolean isLecturer(Long memberId, String lectureId){
+    public boolean isLecturer(Long memberId, String lectureId) {
         return lectureRepository.existsByIdAndMemberId(lectureId, memberId);
     }
 
@@ -212,10 +227,10 @@ public class LectureService {
     }
 
     @Transactional
-    public void updateThumbnailAndTextbook(LectureUploadDto lectureUploadDto){
+    public void updateThumbnailAndTextbook(LectureUploadDto lectureUploadDto) {
         Lecture lecture = lectureRepository.findById(lectureUploadDto.getLectureId())
-                .orElseThrow(()-> new BaseException(LectureError.LECTURE_NOT_FOUND));
-        lecture.updateThumbnailAndTextbook(lectureUploadDto.getThumbnailKey(),lectureUploadDto.getBookKey());
+                .orElseThrow(() -> new BaseException(LectureError.LECTURE_NOT_FOUND));
+        lecture.updateThumbnailAndTextbook(lectureUploadDto.getThumbnailKey(), lectureUploadDto.getBookKey());
     }
 
     @Transactional
@@ -236,9 +251,9 @@ public class LectureService {
     }
 
     @Transactional
-    public void updateTotalPlaytime(EncodingSuccess encodingSuccess){
+    public void updateTotalPlaytime(EncodingSuccess encodingSuccess) {
         Lecture lecture = lectureRepository.findById(encodingSuccess.getLectureId())
-                .orElseThrow(()-> new BaseException(LectureError.LECTURE_NOT_FOUND));
+                .orElseThrow(() -> new BaseException(LectureError.LECTURE_NOT_FOUND));
         lecture.updateTotalPlaytime(encodingSuccess.getDuration());
 
         String[] parts = encodingSuccess.getLectureId().split("_", 2); // limit=2 로 나누기
@@ -250,5 +265,23 @@ public class LectureService {
                 .lectureName(lectureName)
                 .status("성공")
                 .build();
+    }
+
+    @Transactional
+    public void updateLectureProgress(ProgressUpdate progressUpdate) {
+        Lecture lecture = lectureRepository.findById(progressUpdate.getLectureId())
+                .orElseThrow(() -> new BaseException(LectureError.LECTURE_NOT_FOUND));
+
+        int percent = lecture.getTotalPlaytime() / progressUpdate.getPlaytime() * 100;
+
+        LectureProgress progress = lectureProgressRepository.findByMemberIdAndLectureId(progressUpdate.getMemberId(), progressUpdate.getLectureId());
+
+        progress.updateProgress(percent);
+        progress.updateLastWatched(progressUpdate.getLessonId());
+    }
+
+    @Transactional
+    public void withdrawLecture(Long memberId, String lectureId) {
+        lectureEnrollmentRepository.deleteByMemberIdAndLectureId(memberId, lectureId);
     }
 }

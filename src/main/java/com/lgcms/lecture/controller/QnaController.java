@@ -25,7 +25,7 @@ public class QnaController {
 
     private final QnaService qnaService;
 
-    @PostMapping("/student//lecture/qna")
+    @PostMapping("/student/lecture/qna")
     public ResponseEntity<BaseResponse<Long>> registerQuestion(@RequestBody QuestionCreateRequest questionCreateRequest,
                                                                @RequestHeader("X-USER-ID") Long memberId) {
         Long qnaId = qnaService.registerQuestion(memberId, questionCreateRequest);
