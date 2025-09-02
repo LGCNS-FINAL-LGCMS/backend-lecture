@@ -137,7 +137,7 @@ public class LectureService {
                 .lectureResponseDto(lectureResponseDto)
                 .lessonResponses(lessonResponses)
                 .isStudent(isStudent)
-                .progress(progress.getProgress())
+                .progress(progress)
                 .build();
     }
 
