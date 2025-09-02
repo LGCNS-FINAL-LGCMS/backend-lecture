@@ -6,8 +6,8 @@ spring:
     name: backend-lecture
 
   datasource:
-    url: jdbc:postgresql://localhost:23309/lecture?serverTimezone=UTC&useSSL=true&autoReconnect=true&useUnicode=true&characterEncoding=utf-8
-    username: postgres
+    url: jdbc:postgresql://localhost:38121/lecture?serverTimezone=UTC&useSSL=true&autoReconnect=true&useUnicode=true&characterEncoding=utf-8
+    username: lgcms
     password: 1234
     driver-class-name: org.postgresql.Driver
     hikari:
