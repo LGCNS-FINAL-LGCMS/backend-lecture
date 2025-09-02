@@ -1,0 +1,43 @@
+server:
+  port: 38106
+
+spring:
+  application:
+    name: backend-lecture
+
+  datasource:
+    url: jdbc:postgresql://localhost:38121/lecture?serverTimezone=UTC&useSSL=true&autoReconnect=true&useUnicode=true&characterEncoding=utf-8
+    username: lgcms
+    password: 1234
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      connection-test-query: SELECT 1
+      validation-timeout: 5000
+  jpa:
+    hibernate:
+      ddl-auto: create
+    generate-ddl: true
+    show-sql: true
+    open-in-view: false
+
+  kafka:
+    bootstrap-servers: localhost:38123
+    consumer:
+      group-id: ${spring.application.name}
+      enable-auto-commit: false
+      auto-offset-reset: latest
+      max-poll-records: 10
+      properties:
+        spring.json.trusted.packages: "*"
+        spring.json.use.type.headers: false
+
+    producer:
+      properties:
+        spring.json.add.type.headers: false
+
+  cloud:
+    openfeign:
+      client:
+        config:
+          RemoteLessonService:
+            url: http://localhost:38107

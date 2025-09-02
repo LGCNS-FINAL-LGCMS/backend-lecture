@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LectureProgressRepository extends JpaRepository<LectureProgress, Long> {
+    LectureProgress findByMemberIdAndLectureId(Long memberId, String lectureId);
 }

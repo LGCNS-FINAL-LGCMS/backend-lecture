@@ -35,7 +35,7 @@ public class LectureProgress {
     }
 
     public void updateProgress(int progress){
-        this.progress = progress;
+        this.progress = (progress > 98) ? 100 : progress;
     }
 
     public void updateLastWatched(String id){

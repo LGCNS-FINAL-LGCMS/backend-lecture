@@ -5,6 +5,7 @@ import com.lgcms.lecture.common.dto.BaseResponse;
 import com.lgcms.lecture.dto.request.lecture.LectureModifyDto;
 import com.lgcms.lecture.dto.request.lecture.LectureRequestDto;
 import com.lgcms.lecture.dto.request.lecture.LectureStatusDto;
+import com.lgcms.lecture.dto.response.lecture.LectureInfoResponse;
 import com.lgcms.lecture.dto.response.lecture.LectureResponseDto;
 import com.lgcms.lecture.service.LectureService;
 import lombok.RequiredArgsConstructor;
@@ -58,9 +59,10 @@ public class LectureController {
 
     //강의 정보 단일 조회
     @GetMapping("/lecture/{id}")
-    public ResponseEntity<BaseResponse<LectureResponseDto>> getLecture(@PathVariable("id") String lectureId){
-        LectureResponseDto lecture = lectureService.getLecture(lectureId);
-        return ResponseEntity.ok(BaseResponse.ok(lecture));
+    public ResponseEntity<BaseResponse<LectureInfoResponse>> getLecture(@PathVariable("id") String lectureId,
+                                                                        @RequestHeader("X-USER-ID") Long memberId){
+        LectureInfoResponse lectureInfoResponse = lectureService.getLecture(lectureId,memberId);
+        return ResponseEntity.ok(BaseResponse.ok(lectureInfoResponse));
     }
 
     //강사의 강의 조회
@@ -102,6 +104,14 @@ public class LectureController {
         return ResponseEntity.ok(BaseResponse.ok(null));
     }
 
+    //강의 등록 취소
+    @DeleteMapping("/student/lecture/withdraw/{id}")
+    public ResponseEntity<BaseResponse> withdrawLecture(@PathVariable("id") String lectureId,
+                                                        @RequestHeader("X-USER-ID") Long memberId){
+        lectureService.withdrawLecture(memberId,lectureId);
+        return ResponseEntity.ok(BaseResponse.ok(null));
+    }
+
     @GetMapping("/lecturer/lecture/verify")
     public ResponseEntity<BaseResponse<Boolean>> verifyLecture(@RequestHeader("X-USER-ID") Long memberId, @RequestParam String lectureId){
 
@@ -109,7 +119,7 @@ public class LectureController {
     }
 
     @GetMapping("/student/lecture/verify")
-    public ResponseEntity<BaseResponse<Boolean>> verifyStudent(@RequestHeader("X-USER-ID") Long memberId, @RequestParam String lectureId){
-        return ResponseEntity.ok(BaseResponse.ok(lectureService.isStudent(memberId,lectureId)));
+    public ResponseEntity<BaseResponse<Boolean>> verifyStudent(@RequestHeader("X-USER-ID") Long memberId, @RequestParam String lectureId) {
+        return ResponseEntity.ok(BaseResponse.ok(lectureService.isStudent(memberId, lectureId)));
     }
 }
