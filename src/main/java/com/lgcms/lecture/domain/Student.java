@@ -22,7 +22,7 @@ public class Student {
     private Long memberId;
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<LectureEnrollment> enrollments;
+    private List<LectureEnrollment> enrollments = new ArrayList<>();
 
     public void addEnrollment(LectureEnrollment lectureEnrollment){
         this.enrollments.add(lectureEnrollment);
