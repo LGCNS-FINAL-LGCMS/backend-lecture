@@ -6,11 +6,11 @@ public record LectureReviewsResponse(
             Long id,
             Long memberId,
             String lectureId,
-            String suggestion,
-            Long star,
+            String suggestion, //개선점
+            Integer star, //별점 //Integer 변경
             String nickname,
-            Integer difficulty,
-            Integer usefulness,
-            LocalDateTime createdAt,
-            LocalDateTime updatedAt
+            Integer difficulty, //난이도
+            Integer usefulness, //유익함
+            LocalDateTime createdAt
+            // updatedAt 삭제
     ) {}

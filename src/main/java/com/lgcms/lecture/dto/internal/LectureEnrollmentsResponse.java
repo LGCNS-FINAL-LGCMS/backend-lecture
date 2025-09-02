@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 
 public record LectureEnrollmentsResponse(
             Long id,
-            Long studentId,
+            Long studentId, //memberId
             String lectureId,
-            LocalDateTime enrollmentAt
+            LocalDateTime enrollmentAt //createdAt
     ) {
     }

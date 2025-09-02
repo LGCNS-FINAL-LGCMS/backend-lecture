@@ -1,6 +1,7 @@
 package com.lgcms.lecture.repository;
 
 import com.lgcms.lecture.domain.LectureEnrollment;
+import com.lgcms.lecture.dto.internal.LectureEnrollmentsResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,4 +28,16 @@ public interface LectureEnrollmentRepository extends JpaRepository<LectureEnroll
     @Modifying
     @Query("DELETE FROM LectureEnrollment le WHERE le.memberId = :memberId AND le.lecture.id = :lectureId")
     void deleteByMemberIdAndLectureId(@Param("memberId") Long memberId, @Param("lectureId") String lectureId);
+
+
+    @Query("""
+            SELECT er.id as id,
+                   er.memberId as memberId,
+                   er.createdAt as enrolledAt
+                   lt.id as lectureId
+            FROM LectureEnrollment er
+            LEFT JOIN er.lecture lt
+            
+            """)
+    List<LectureEnrollmentsResponse> findAllEnrollment();
 }
