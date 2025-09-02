@@ -108,6 +108,8 @@ public class LectureService {
         Lecture lecture = lectureRepository.findById(lectureId)
                 .orElseThrow(() -> new BaseException(LectureError.LECTURE_NOT_FOUND));
 
+        LectureProgress progress = lectureProgressRepository.findByMemberIdAndLectureId(memberId, lectureId);
+
         boolean isStudent = isStudent(memberId, lectureId);
 
         List<LessonResponse> lessonResponses = lessonService.getLessons(lectureId);
@@ -131,6 +133,7 @@ public class LectureService {
                 .lectureResponseDto(lectureResponseDto)
                 .lessonResponses(lessonResponses)
                 .isStudent(isStudent)
+                .progress(progress.getProgress())
                 .build();
     }
 

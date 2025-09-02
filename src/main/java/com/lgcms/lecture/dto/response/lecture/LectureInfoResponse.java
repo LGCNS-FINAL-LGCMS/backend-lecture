@@ -16,4 +16,5 @@ public class LectureInfoResponse {
     private LectureResponseDto lectureResponseDto;
     private List<LessonResponse> lessonResponses;
     private Boolean isStudent;
+    private Integer progress;
 }
