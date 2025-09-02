@@ -1,8 +1,8 @@
 package com.lgcms.lecture.dto.internal;
 
 public record LectureProgressResponse(
-        Long id,
+        Long id, //index
         Long memberId,
         String lectureId,
-        Long progressRate
+        Integer progressRate  //Integer로 바뀜
     ) {}

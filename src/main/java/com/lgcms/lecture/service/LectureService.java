@@ -117,6 +117,7 @@ public class LectureService {
                 .nickname(lecture.getNickname())
                 .averageStar(lecture.getAverageStar())
                 .description(lecture.getDescription())
+                .reviewCount(lecture.getReviewCount())
                 .lectureId(lecture.getId())
                 .thumbnail(lecture.getThumbnail())
                 .textbook(lecture.getTextbook())
