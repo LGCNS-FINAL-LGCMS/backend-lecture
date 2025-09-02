@@ -29,6 +29,7 @@ public class LectureEnrollment {
     private Lecture lecture;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private EnrollmentStatus enrollmentStatus;
 
     private LocalDateTime createdAt;
