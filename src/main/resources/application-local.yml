@@ -41,3 +41,11 @@ spring:
         config:
           RemoteLessonService:
             url: http://localhost:38107
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus,health,info
+  metrics:
+    tags:
+      application: ${spring.application.name}
