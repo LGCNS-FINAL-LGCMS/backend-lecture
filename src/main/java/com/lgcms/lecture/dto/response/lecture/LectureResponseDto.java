@@ -27,4 +27,6 @@ public class LectureResponseDto {
     private Long reviewCount;
 
     private String information;
+
+    private String status;
 }

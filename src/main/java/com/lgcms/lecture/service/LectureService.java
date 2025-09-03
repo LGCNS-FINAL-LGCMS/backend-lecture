@@ -100,8 +100,8 @@ public class LectureService {
     public String modifyLectureStatus(LectureStatusDto lectureStatusDto) {
         Lecture lecture = lectureRepository.findById(lectureStatusDto.getLectureId())
                 .orElseThrow(() -> new BaseException(LectureError.LECTURE_NOT_FOUND));
-
-        if(lessonService.getLessons(lecture.getId()) == null) throw new BaseException(LectureError.LECTURE_ENROLL_FORBIDDEN);
+        List<LessonResponse> lessonResponses = lessonService.getLessons(lecture.getId());
+        if(lessonResponses == null || lessonResponses.isEmpty()) throw new BaseException(LectureError.LECTURE_ENROLL_FORBIDDEN);
 
         lecture.modifyLectureStatus();
 
@@ -256,6 +256,7 @@ public class LectureService {
                 .price(lecture.getPrice())
                 .thumbnail(lecture.getThumbnail())
                 .information(lecture.getInformation())
+                .status(lecture.getLectureStatus().toString())
                 .averageStar(lecture.getAverageStar())
                 .reviewCount(lecture.getReviewCount())
                 .build());
