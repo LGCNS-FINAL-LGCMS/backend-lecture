@@ -100,7 +100,11 @@ public class LectureService {
     public String modifyLectureStatus(LectureStatusDto lectureStatusDto) {
         Lecture lecture = lectureRepository.findById(lectureStatusDto.getLectureId())
                 .orElseThrow(() -> new BaseException(LectureError.LECTURE_NOT_FOUND));
+
+        if(lessonService.getLessons(lecture.getId()) == null) throw new BaseException(LectureError.LECTURE_ENROLL_FORBIDDEN);
+
         lecture.modifyLectureStatus();
+
         return lectureStatusDto.getLectureStatus();
     }
 
@@ -244,7 +248,6 @@ public class LectureService {
     @Transactional
     public Page<LectureResponseDto> getLecturerLectures(Long memberId, Pageable pageable) {
         Page<Lecture> lectures = lectureRepository.findAllByMemberId(memberId, pageable);
-
         return lectures.map(lecture -> LectureResponseDto.builder()
                 .lectureId(lecture.getId())
                 .description(lecture.getDescription())
