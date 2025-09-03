@@ -1,15 +1,13 @@
 package com.lgcms.lecture.controller.internal;
 
 import com.lgcms.lecture.dto.internal.*;
+import com.lgcms.lecture.dto.request.lecture.JoinLectureRequest;
 import com.lgcms.lecture.service.LectureService;
 import com.lgcms.lecture.service.internal.InternalLectureService;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,6 +29,11 @@ public class InternalLectureController {
     public boolean verifyStudent(@RequestParam Long memberId, @RequestParam String lectureId){
 
         return lectureService.isStudent(memberId, lectureId);
+    }
+
+    @PostMapping("/student/join")
+    public void joinStudent(@RequestBody JoinLectureRequest joinLectureRequest){
+        lectureService.joinLecture(joinLectureRequest.memberId(), joinLectureRequest.lectureId());
     }
 
     @GetMapping("/data")
