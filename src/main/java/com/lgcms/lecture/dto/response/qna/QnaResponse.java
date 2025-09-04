@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -12,8 +13,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class QnaResponse {
+    private Long id;
     private String title;
-    private String question;
-    private String questionCreatedAt;
+    private String content;
+    private LocalDateTime createdAt;
     private List<AnswerResponse> answer;
 }
