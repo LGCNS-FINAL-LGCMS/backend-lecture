@@ -160,8 +160,8 @@ public class QnaService {
                 .orElseThrow(() -> new BaseException(QnaError.QNA_NOT_FOUND));
         QnaResponse qnaResponse = QnaResponse.builder()
                 .title(lectureQuestion.getTitle())
-                .question(lectureQuestion.getContent())
-                .questionCreatedAt(lectureQuestion.getCreatedAt().toString())
+                .content(lectureQuestion.getContent())
+                .createdAt(lectureQuestion.getCreatedAt())
                 .answer(
                         lectureQuestion.getLectureAnswers().stream()
                                 .map(answer -> new AnswerResponse(answer.getContent(), answer.getId()))
