@@ -284,7 +284,7 @@ public class LectureService {
         Lecture lecture = lectureRepository.findById(progressUpdate.getLectureId())
                 .orElseThrow(() -> new BaseException(LectureError.LECTURE_NOT_FOUND));
 
-        int percent = lecture.getTotalPlaytime() / progressUpdate.getPlaytime() * 100;
+        int percent = progressUpdate.getPlaytime() / lecture.getTotalPlaytime() * 100;
 
         LectureProgress progress = lectureProgressRepository.findByMemberIdAndLectureId(progressUpdate.getMemberId(), progressUpdate.getLectureId()).get();
 
