@@ -293,7 +293,8 @@ public class LectureService {
 
         int percent = progressUpdate.getPlaytime() / lecture.getTotalPlaytime() * 100;
 
-        LectureProgress progress = lectureProgressRepository.findByMemberIdAndLectureId(progressUpdate.getMemberId(), progressUpdate.getLectureId()).get();
+        LectureProgress progress = lectureProgressRepository.findByMemberIdAndLectureId(progressUpdate.getMemberId(), progressUpdate.getLectureId())
+                .orElseThrow(()-> new BaseException(LectureError.LECTURE_NOT_FOUND));
 
         progress.updateProgress(percent);
         progress.updateLastWatched(progressUpdate.getLessonId());

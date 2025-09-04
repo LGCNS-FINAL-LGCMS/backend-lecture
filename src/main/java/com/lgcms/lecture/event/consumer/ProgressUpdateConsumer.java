@@ -19,6 +19,8 @@ public class ProgressUpdateConsumer {
     @KafkaListener(topics = "PROGRESS_UPDATED", containerFactory = "defaultFactory")
     public void ProgressUpdated(KafkaEvent<?> event){
         ProgressUpdate progressUpdate = kafkaEventFactory.convert(event, ProgressUpdate.class);
+        log.info("lectureId : {}",progressUpdate.getLectureId());
+        log.info("lessonId : {}",progressUpdate.getLessonId());
         lectureService.updateLectureProgress(progressUpdate);
     }
 }
