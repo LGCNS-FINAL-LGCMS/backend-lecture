@@ -13,6 +13,7 @@ import com.lgcms.lecture.dto.request.qna.QuestionCreateRequest;
 import com.lgcms.lecture.dto.request.qna.QuestionUpdateRequest;
 import com.lgcms.lecture.dto.response.qna.AnswerResponse;
 import com.lgcms.lecture.dto.response.qna.QnaListResponse;
+import com.lgcms.lecture.dto.response.qna.QnaResponse;
 import com.lgcms.lecture.event.producer.QnaEventProducer;
 import com.lgcms.lecture.repository.LectureAnswerRepository;
 import com.lgcms.lecture.repository.LectureQuestionRepository;
@@ -151,5 +152,23 @@ public class QnaService {
                 .orElseThrow(() -> new BaseException(QnaError.QNA_NOT_FOUND));
 
         lectureAnswer.updateAnswer(answerUpdateRequest.content());
+    }
+
+    @Transactional
+    public QnaResponse getQna(Long qnaId) {
+        LectureQuestion lectureQuestion = lectureQuestionRepository.findById(qnaId)
+                .orElseThrow(() -> new BaseException(QnaError.QNA_NOT_FOUND));
+        QnaResponse qnaResponse = QnaResponse.builder()
+                .title(lectureQuestion.getTitle())
+                .question(lectureQuestion.getContent())
+                .questionCreatedAt(lectureQuestion.getCreatedAt().toString())
+                .answer(
+                        lectureQuestion.getLectureAnswers().stream()
+                                .map(answer -> new AnswerResponse(answer.getContent(), answer.getId()))
+                                .toList()
+                )
+                .build();
+
+        return qnaResponse;
     }
 }

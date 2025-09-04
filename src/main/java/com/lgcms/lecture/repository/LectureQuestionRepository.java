@@ -2,6 +2,7 @@ package com.lgcms.lecture.repository;
 
 import com.lgcms.lecture.domain.LectureQuestion;
 import com.lgcms.lecture.dto.internal.LectureQuestionsResponse;
+import com.lgcms.lecture.dto.response.qna.QnaResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,5 +26,4 @@ public interface LectureQuestionRepository extends JpaRepository<LectureQuestion
                 WHERE q.lectureId = :lectureId
             """)
     Page<LectureQuestion> findAllByLectureId(@Param("lectureId") String lectureId, Pageable pageable);
-
 }

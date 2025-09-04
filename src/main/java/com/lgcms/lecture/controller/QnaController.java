@@ -6,6 +6,7 @@ import com.lgcms.lecture.dto.request.qna.AnswerUpdateRequest;
 import com.lgcms.lecture.dto.request.qna.QuestionCreateRequest;
 import com.lgcms.lecture.dto.request.qna.QuestionUpdateRequest;
 import com.lgcms.lecture.dto.response.qna.QnaListResponse;
+import com.lgcms.lecture.dto.response.qna.QnaResponse;
 import com.lgcms.lecture.service.QnaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,6 +61,13 @@ public class QnaController {
     public ResponseEntity<BaseResponse<List<QnaListResponse>>> getMemberQnaList(@RequestHeader("X-USER-ID") Long memberId) {
         List<QnaListResponse> qnaListResponse = qnaService.getMemberQnaList(memberId);
         return ResponseEntity.ok(BaseResponse.ok(qnaListResponse));
+    }
+
+    @GetMapping("/lecture/qna/detail/{id}")
+    public ResponseEntity<BaseResponse<QnaResponse>> getQna(@PathVariable("id") Long qnaId,
+                                                            @RequestHeader("X-USER-ID") Long memberId){
+        QnaResponse qnaResponse = qnaService.getQna(qnaId);
+        return ResponseEntity.ok(BaseResponse.ok(qnaResponse));
     }
 
     @PostMapping("/lecturer/lecture/qna/answer/{id}")
