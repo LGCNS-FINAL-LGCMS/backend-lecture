@@ -21,6 +21,7 @@ public class ProgressUpdateConsumer {
         ProgressUpdate progressUpdate = kafkaEventFactory.convert(event, ProgressUpdate.class);
         log.info("lectureId : {}",progressUpdate.getLectureId());
         log.info("lessonId : {}",progressUpdate.getLessonId());
+        log.info("memberId :{}",progressUpdate.getMemberId());
         lectureService.updateLectureProgress(progressUpdate);
     }
 }

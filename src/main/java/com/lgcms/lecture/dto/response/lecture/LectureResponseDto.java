@@ -29,4 +29,6 @@ public class LectureResponseDto {
     private String information;
 
     private String status;
+
+    private Integer progress;
 }
