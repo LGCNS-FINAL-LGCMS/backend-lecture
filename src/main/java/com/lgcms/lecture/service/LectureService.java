@@ -177,6 +177,13 @@ public class LectureService {
 
         lectureEnrollmentRepository.save(lectureEnrollment);
 
+        LectureProgress lectureProgress = LectureProgress.builder()
+                .lectureId(lectureId)
+                .progress(0)
+                .memberId(memberId)
+                .build();
+        lectureProgressRepository.save(lectureProgress);
+
         return lecture.getId();
     }
 
