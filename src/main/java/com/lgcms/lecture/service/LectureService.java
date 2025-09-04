@@ -31,10 +31,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -235,12 +233,20 @@ public class LectureService {
     public Page<LectureResponseDto> getStudentLectures(Long memberId, Pageable pageable) {
 
         Page<LectureEnrollment> enrollments = lectureEnrollmentRepository.findByMemberIdWithLecture(memberId, pageable);
+        List<String> lecturedIds = enrollments.stream()
+                .map(e -> e.getLecture().getId())
+                .toList();
+        Map<String, Integer> progressMap = lectureProgressRepository
+                .findAllByMemberIdAndLectureIdIn(memberId, lecturedIds)
+                .stream()
+                .collect(Collectors.toMap(LectureProgress::getLectureId, LectureProgress::getProgress));
 
         return enrollments.map(enrollment -> LectureResponseDto.builder()
                 .thumbnail(enrollment.getLecture().getThumbnail())
                 .title(enrollment.getLecture().getTitle())
                 .lectureId(enrollment.getLecture().getId())
                 .nickname(enrollment.getLecture().getNickname())
+                .progress(progressMap.getOrDefault(enrollment.getLecture().getId(),0))
                 .build()
         );
     }

@@ -20,9 +20,6 @@ public class EncodingEventConsumer {
     @KafkaListener(topics = "ENCODING_SUCCESS_LECTURE", containerFactory = "defaultFactory")
     public void EncodingSuccess(KafkaEvent<?> event){
         EncodingSuccess encodingSuccess = kafkaEventFactory.convert(event, EncodingSuccess.class);
-        System.out.println(encodingSuccess.getDuration());
-        System.out.println(encodingSuccess.getLessonId());
-        System.out.println(encodingSuccess.getThumbnailUrl());
         lectureService.updateTotalPlaytime(encodingSuccess);
     }
 }
