@@ -54,7 +54,6 @@ public class QnaService {
                 .lectureAnswers(new ArrayList<>())
                 .build();
         lectureQuestionRepository.save(lectureQuestion);
-        System.out.println(lectureQuestion.getId());
 
         QnaCreated qnaCreated = QnaCreated.builder()
                 .lectureName(lecture.getTitle())
