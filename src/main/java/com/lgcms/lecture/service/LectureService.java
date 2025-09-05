@@ -18,6 +18,7 @@ import com.lgcms.lecture.dto.request.lecture.LectureStatusDto;
 import com.lgcms.lecture.dto.response.lecture.LectureInfoResponse;
 import com.lgcms.lecture.dto.response.lecture.LectureResponseDto;
 import com.lgcms.lecture.dto.response.lesson.LessonResponse;
+import com.lgcms.lecture.event.producer.EncodingSuccessProducer;
 import com.lgcms.lecture.repository.LectureEnrollmentRepository;
 import com.lgcms.lecture.repository.LectureProgressRepository;
 import com.lgcms.lecture.repository.LectureRepository;
@@ -44,6 +45,7 @@ public class LectureService {
     private final LectureEnrollmentRepository lectureEnrollmentRepository;
     private final LectureProgressRepository lectureProgressRepository;
     private final LessonService lessonService;
+    private final EncodingSuccessProducer encodingSuccessProducer;
 
     @Transactional  //메타정보 저장 --> file service 에 썸네일 동영상 전달 후 처리
     public String saveLecture(LectureRequestDto lectureRequestDto, Long memberId) {
@@ -290,6 +292,8 @@ public class LectureService {
                 .lectureName(lectureName)
                 .status("성공")
                 .build();
+
+        encodingSuccessProducer.EncodingStatusNotification(encodingStatus);
     }
 
     @Transactional
