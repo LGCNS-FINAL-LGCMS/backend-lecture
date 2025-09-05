@@ -163,6 +163,7 @@ public class QnaService {
                 .title(lectureQuestion.getTitle())
                 .content(lectureQuestion.getContent())
                 .createdAt(lectureQuestion.getCreatedAt())
+                .lectureId(lectureQuestion.getLectureId())
                 .answer(
                         lectureQuestion.getLectureAnswers().stream()
                                 .map(answer -> new AnswerResponse(answer.getContent(), answer.getId()))
