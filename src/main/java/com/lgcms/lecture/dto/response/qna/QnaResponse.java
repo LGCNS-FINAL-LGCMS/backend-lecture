@@ -16,6 +16,7 @@ public class QnaResponse {
     private Long id;
     private String title;
     private String content;
+    private String lectureId;
     private LocalDateTime createdAt;
     private List<AnswerResponse> answer;
 }
