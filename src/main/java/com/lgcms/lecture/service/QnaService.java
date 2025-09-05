@@ -53,13 +53,14 @@ public class QnaService {
                 .content(questionCreateRequest.getContent())
                 .lectureAnswers(new ArrayList<>())
                 .build();
+        lectureQuestionRepository.save(lectureQuestion);
+
         QnaCreated qnaCreated = QnaCreated.builder()
                 .lectureName(lecture.getTitle())
                 .memberId(lecture.getMemberId())
                 .qnaId(lectureQuestion.getId())
                 .build();
         qnaCreatedEvent.QnaCreated(qnaCreated);
-        lectureQuestionRepository.save(lectureQuestion);
         return lectureQuestion.getId();
     }
 
