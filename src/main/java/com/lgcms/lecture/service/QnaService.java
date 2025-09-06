@@ -142,6 +142,9 @@ public class QnaService {
                 .memberId(lectureQuestion.getMemberId())
                 .build();
         lectureQuestion.addAnswer(lectureAnswer);
+
+        qnaCreatedEvent.QnaAnswered(qnaAnswered);
+
     }
 
     @Transactional
