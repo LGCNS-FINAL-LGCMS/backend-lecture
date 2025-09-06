@@ -18,7 +18,10 @@ public class UploadEventConsumer {
     private final LectureService lectureService;
     private final KafkaEventFactory kafkaEventFactory;
 
-    @KafkaListener(topics = "UPLOAD_LECTURE", containerFactory = "defaultFactory")
+    @KafkaListener(
+        topics = "UPLOAD_LECTURE"
+//        , containerFactory = "defaultFactory"
+    )
     public void LectureUploadConsume(KafkaEvent<?> event){
         LectureUploadDto lectureUploadDto = kafkaEventFactory.convert(event, LectureUploadDto.class);
         lectureService.updateThumbnailAndTextbook(lectureUploadDto);

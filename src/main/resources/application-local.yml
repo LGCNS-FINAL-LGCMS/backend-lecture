@@ -34,6 +34,25 @@ spring:
     producer:
       properties:
         spring.json.add.type.headers: false
+otel:
+  propagators:
+    - tracecontext
+    - b3
+    - baggage
+management:
+  otlp:
+    tracing:
+#      endpoint: http://localhost:4317
+  endpoints:
+    web:
+      exposure:
+        include: prometheus,health,info
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  tracing:
+    sampling:
+      probability: 1.0
 
   cloud:
     openfeign:
