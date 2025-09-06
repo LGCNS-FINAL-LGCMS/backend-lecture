@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class EncodingStatus {
 
-    private String lectureId;
     private Long memberId;
+    private String lectureId;
     private String lectureName;
     private String status;
 }
