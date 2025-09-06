@@ -22,26 +22,27 @@ public class QnaEventProducer {
 
     private final KafkaTemplate kafkaTemplate;
 
-    public void QnaCreated(QnaCreated qnaCreated){
+    public void QnaCreated(QnaCreated qnaCreated) {
 
         KafkaEvent kafkaEvent = KafkaEvent.builder()
-                .eventId(applicationName + UUID.randomUUID().toString())
-                .eventTime(LocalDateTime.now().toString())
-                .eventType("QNA_CREATED")
-                .data(qnaCreated)
-                .build();
+            .eventId(applicationName + UUID.randomUUID().toString())
+            .eventTime(LocalDateTime.now().toString())
+            .eventType("QNA_CREATED")
+            .data(qnaCreated)
+            .build();
 
-        kafkaTemplate.send("NOTIFICATION",kafkaEvent);
+        kafkaTemplate.send("NOTIFICATION", kafkaEvent);
     }
-    public void QnaAnswered(QnaAnswered qnaAnswered){
+
+    public void QnaAnswered(QnaAnswered qnaAnswered) {
 
         KafkaEvent kafkaEvent = KafkaEvent.builder()
-                .eventId(applicationName + UUID.randomUUID().toString())
-                .eventTime(LocalDateTime.now().toString())
-                .eventType("QNA_ANSWERED")
-                .data(qnaAnswered)
-                .build();
+            .eventId(applicationName + UUID.randomUUID().toString())
+            .eventTime(LocalDateTime.now().toString())
+            .eventType("QNA_ANSWERED")
+            .data(qnaAnswered)
+            .build();
 
-        kafkaTemplate.send("NOTIFICATION",kafkaEvent);
+        kafkaTemplate.send("NOTIFICATION", kafkaEvent);
     }
 }

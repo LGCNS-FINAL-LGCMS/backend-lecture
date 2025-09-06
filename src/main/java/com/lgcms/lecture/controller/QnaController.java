@@ -2,7 +2,6 @@ package com.lgcms.lecture.controller;
 
 import com.lgcms.lecture.common.dto.BaseResponse;
 import com.lgcms.lecture.dto.request.qna.AnswerRequest;
-import com.lgcms.lecture.dto.request.qna.AnswerUpdateRequest;
 import com.lgcms.lecture.dto.request.qna.QuestionCreateRequest;
 import com.lgcms.lecture.dto.request.qna.QuestionUpdateRequest;
 import com.lgcms.lecture.dto.response.qna.QnaListResponse;
@@ -18,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,8 +27,10 @@ public class QnaController {
     private final QnaService qnaService;
 
     @PostMapping("/student/lecture/qna")
-    public ResponseEntity<BaseResponse<Long>> registerQuestion(@RequestBody QuestionCreateRequest questionCreateRequest,
-                                                               @RequestHeader("X-USER-ID") Long memberId) {
+    public ResponseEntity<BaseResponse<Long>> registerQuestion(
+        @RequestBody QuestionCreateRequest questionCreateRequest,
+        @RequestHeader("X-USER-ID") Long memberId
+    ) {
         Long qnaId = qnaService.registerQuestion(memberId, questionCreateRequest);
 
         return ResponseEntity.ok(BaseResponse.ok(qnaId));
@@ -65,7 +67,7 @@ public class QnaController {
 
     @GetMapping("/lecture/qna/detail/{id}")
     public ResponseEntity<BaseResponse<QnaResponse>> getQna(@PathVariable("id") Long qnaId,
-                                                            @RequestHeader("X-USER-ID") Long memberId){
+                                                            @RequestHeader("X-USER-ID") Long memberId) {
         QnaResponse qnaResponse = qnaService.getQna(qnaId);
         return ResponseEntity.ok(BaseResponse.ok(qnaResponse));
     }
