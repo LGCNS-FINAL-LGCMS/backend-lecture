@@ -33,7 +33,7 @@ public class ReviewController {
 
     @GetMapping("/lecture/review/list/{id}")
     public ResponseEntity<BaseResponse<Page<ReviewResponse>>> getAllReview(@PathVariable("id") String lectureId,
-                                                                           @RequestHeader("X-USER-ID") Long memberId,
+                                                                           @RequestHeader(value = "X-USER-ID", required = false) Long memberId,
                                                                            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<ReviewResponse> reviewResponseList = reviewService.getAllReviews(lectureId, pageable);
 
@@ -41,7 +41,7 @@ public class ReviewController {
     }
 
     @GetMapping("/lecture/review")
-    public ResponseEntity<BaseResponse<Page<ReviewResponse>>> getReview(@RequestHeader("X-USER-ID") Long memberId,
+    public ResponseEntity<BaseResponse<Page<ReviewResponse>>> getReview(@RequestHeader(value = "X-USER-ID", required = false) Long memberId,
                                                                         @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<ReviewResponse> reviewResponseList = reviewService.getReview(memberId, pageable);
 

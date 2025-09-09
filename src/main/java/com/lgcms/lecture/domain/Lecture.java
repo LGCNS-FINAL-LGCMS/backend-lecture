@@ -28,8 +28,10 @@ public class Lecture {
 
     private String nickname;
 
+    @Column(columnDefinition = "text")
     private String description;
 
+    @Column(columnDefinition = "text")
     private String information;
 
     private String category;
