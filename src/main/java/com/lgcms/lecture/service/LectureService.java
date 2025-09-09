@@ -155,6 +155,8 @@ public class LectureService {
 
     @Transactional
     public String joinLecture(Long memberId, String lectureId) {
+        if(isStudent(memberId, lectureId)) throw new BaseException(LectureError.LECTURE_DUPLICATED);
+
         Lecture lecture = lectureRepository.findById(lectureId)
                 .orElseThrow(() -> new BaseException(LectureError.LECTURE_NOT_FOUND));
 
