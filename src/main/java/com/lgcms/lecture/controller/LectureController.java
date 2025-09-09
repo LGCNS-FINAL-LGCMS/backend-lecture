@@ -60,7 +60,7 @@ public class LectureController {
     //강의 정보 단일 조회
     @GetMapping("/lecture/{id}")
     public ResponseEntity<BaseResponse<LectureInfoResponse>> getLecture(@PathVariable("id") String lectureId,
-                                                                        @RequestHeader("X-USER-ID") Long memberId){
+                                                                        @RequestHeader(value = "X-USER-ID", required = false) Long memberId){
         LectureInfoResponse lectureInfoResponse = lectureService.getLecture(lectureId,memberId);
         return ResponseEntity.ok(BaseResponse.ok(lectureInfoResponse));
     }
