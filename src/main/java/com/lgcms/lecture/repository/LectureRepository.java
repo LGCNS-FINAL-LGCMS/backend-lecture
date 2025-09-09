@@ -51,4 +51,12 @@ public interface LectureRepository extends JpaRepository<Lecture, String> {
             WHERE l.memberId = :memberId
             """)
     Page<Lecture> findAllByMemberId(@Param("memberId") Long memberId, Pageable pageable);
+
+
+    @Query(value = """
+            SELECT l
+            FROM Lecture l
+            WHERE l.lectureStatus = 'APPROVED'
+            """)
+    Page<Lecture> findAllLecture(Pageable pageable);
 }

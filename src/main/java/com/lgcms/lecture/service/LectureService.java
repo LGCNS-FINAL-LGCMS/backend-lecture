@@ -79,7 +79,7 @@ public class LectureService {
         } else if (category != null && !category.isBlank()) {
             lectureList = lectureRepository.findByCategoryAsPage(category, pageable);
         } else {
-            lectureList = lectureRepository.findAll(pageable);
+            lectureList = lectureRepository.findAllLecture(pageable);
         }
         return lectureList
                 .map(lecture -> LectureResponseDto.builder()
