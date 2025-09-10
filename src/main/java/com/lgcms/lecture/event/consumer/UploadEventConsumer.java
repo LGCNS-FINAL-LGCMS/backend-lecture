@@ -8,6 +8,7 @@ import com.lgcms.lecture.service.LectureService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,7 +20,8 @@ public class UploadEventConsumer {
     private final KafkaEventFactory kafkaEventFactory;
 
     @KafkaListener(topics = "LECTURE_UPLOAD")
-    public void LectureUploadConsume(KafkaEvent<?> event){
+    public void LectureUploadConsume(KafkaEvent<?> event, Acknowledgment ack){
+        ack.acknowledge();
         LectureUploadDto lectureUploadDto = kafkaEventFactory.convert(event, LectureUploadDto.class);
         lectureService.updateThumbnailAndTextbook(lectureUploadDto);
      }
