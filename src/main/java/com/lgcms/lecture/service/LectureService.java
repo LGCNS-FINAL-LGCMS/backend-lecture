@@ -304,12 +304,14 @@ public class LectureService {
                 .orElseThrow(() -> new BaseException(LectureError.LECTURE_NOT_FOUND));
 
         int percent = progressUpdate.getPlaytime() / lecture.getTotalPlaytime() * 100;
-
+        log.info("진도율 퍼센트 : {}",percent);
         LectureProgress progress = lectureProgressRepository.findByMemberIdAndLectureId(progressUpdate.getMemberId(), progressUpdate.getLectureId())
                 .orElseThrow(()-> new BaseException(LectureError.LECTURE_NOT_FOUND));
 
         progress.updateProgress(percent);
         progress.updateLastWatched(progressUpdate.getLessonId());
+
+        lectureProgressRepository.save(progress);
     }
 
     @Transactional
