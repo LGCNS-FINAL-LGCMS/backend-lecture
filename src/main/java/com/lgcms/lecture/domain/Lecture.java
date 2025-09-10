@@ -97,6 +97,6 @@ public class Lecture {
     }
 
     public void updateTotalPlaytime(int addPlaytime){
-        this.totalPlaytime += addPlaytime;
+        this.totalPlaytime = addPlaytime;
     }
 }

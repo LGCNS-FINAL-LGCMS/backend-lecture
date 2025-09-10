@@ -285,7 +285,7 @@ public class LectureService {
                 .orElseThrow(() -> new BaseException(LectureError.LECTURE_NOT_FOUND));
         lecture.updateTotalPlaytime(encodingSuccess.getDuration());
 
-        String[] parts = encodingSuccess.getLectureId().split("_", 2); // limit=2 로 나누기
+        String[] parts = encodingSuccess.getLectureId().split("_", 2);
         String lectureName = parts[1];
 
         EncodingStatus encodingStatus = EncodingStatus.builder()
