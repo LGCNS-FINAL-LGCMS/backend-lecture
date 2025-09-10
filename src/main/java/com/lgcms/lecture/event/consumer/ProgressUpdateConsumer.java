@@ -22,6 +22,7 @@ public class ProgressUpdateConsumer {
         log.info("lectureId : {}",progressUpdate.getLectureId());
         log.info("lessonId : {}",progressUpdate.getLessonId());
         log.info("memberId :{}",progressUpdate.getMemberId());
+        log.info("progress : {}", progressUpdate.getPlaytime());s
         lectureService.updateLectureProgress(progressUpdate);
     }
 }
