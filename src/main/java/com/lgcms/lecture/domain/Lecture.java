@@ -99,4 +99,8 @@ public class Lecture {
     public void updateTotalPlaytime(int addPlaytime){
         this.totalPlaytime = addPlaytime;
     }
+
+    public void hiddenLecture(){
+        this.lectureStatus = LectureStatus.HIDDEN;
+    }
 }
