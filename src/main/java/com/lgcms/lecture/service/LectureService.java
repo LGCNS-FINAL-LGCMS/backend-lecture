@@ -315,6 +315,8 @@ public class LectureService {
 
     @Transactional
     public void withdrawLecture(Long memberId, String lectureId) {
-        lectureEnrollmentRepository.deleteByMemberIdAndLectureId(memberId, lectureId);
+        Lecture lecture = lectureRepository.findById(lectureId)
+                .orElseThrow(()-> new BaseException(LectureError.LECTURE_NOT_FOUND));
+        lecture.hiddenLecture();
     }
 }
